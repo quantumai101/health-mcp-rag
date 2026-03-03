@@ -1,0 +1,39 @@
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Virtual Environments ─────────────────────────────────────
+.venv/
+.venv-1/
+venv/
+env/
+ENV/
+
+# ── Secrets ──────────────────────────────────────────────────
+.env
+*.env
+
+# ── Data & Vector Store (keep out of git — can be large) ─────
+chroma_db/
+data/
+Data/
+official_data/
+
+# ── Temp / OS ────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+/tmp/
+
+# ── IDE ──────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.swp
