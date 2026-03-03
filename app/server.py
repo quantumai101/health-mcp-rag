@@ -2,7 +2,7 @@
 """
 ╔══════════════════════════════════════════════════════════════╗
 ║   HEALTH-MCP-RAG · AI Portfolio Server                      ║
-║   Stack: Gemini (free) · ChromaDB · FastAPI                 ║
+║   Stack: Gemini (free) · ChromaDB · FastAPI                 ╠
 ╚══════════════════════════════════════════════════════════════╝
 """
 
@@ -13,11 +13,12 @@ import shutil
 import threading
 from pathlib import Path
 from datetime import date, datetime
+from collections import defaultdict
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from fastapi import FastAPI, HTTPException, UploadFile, File, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, BackgroundTasks
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -37,6 +38,23 @@ GEMINI_MODEL = "gemini-3-flash-preview"
 # GEMINI_MODEL = "gemini-1.5-flash"
 RETRIEVAL_K  = 6
 DEEP_K       = 12
+
+# ── RATE LIMITING ─────────────────────────────────────────────
+# Max 10 requests per IP per minute (protects free Gemini quota)
+RATE_LIMIT_REQUESTS = 10
+RATE_LIMIT_WINDOW   = 60  # seconds
+_request_counts: dict = defaultdict(list)
+
+def check_rate_limit(ip: str):
+    now = time.time()
+    # Keep only requests within the time window
+    _request_counts[ip] = [t for t in _request_counts[ip] if now - t < RATE_LIMIT_WINDOW]
+    if len(_request_counts[ip]) >= RATE_LIMIT_REQUESTS:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Too many requests. Max {RATE_LIMIT_REQUESTS} per minute. Please wait and try again."
+        )
+    _request_counts[ip].append(now)
 
 PERSONA_PROMPT = """You are an AI portfolio assistant representing {name}.
 You are deployed as a live demonstration of {name}'s practical AI engineering skills —
@@ -116,7 +134,11 @@ async def serve_ui():
     return HTMLResponse("<h1>chat_ui.html not found</h1>")
 
 @app.post("/chat", response_model=ChatResponse)
-async def chat(req: ChatRequest):
+async def chat(req: ChatRequest, request: Request):
+    # ── Rate limit check ──────────────────────────────────────
+    client_ip = request.client.host
+    check_rate_limit(client_ip)
+
     t0 = time.time()
     context, sources = "", []
 
@@ -198,6 +220,7 @@ async def startup():
     print(f"  🧬 Health MCP RAG · {OWNER_NAME}")
     print(f"  🤖 LLM:      Gemini / {GEMINI_MODEL} (free)")
     print(f"  🗄️  ChromaDB: {'✅ ready' if CHROMA_DIR.exists() else '❌ run ingest.py'}")
+    print(f"  🛡️  Rate limit: {RATE_LIMIT_REQUESTS} req/min per IP")
     print(f"  🌐 Open:     http://localhost:8000")
     print(f"{'═'*58}\n")
     threading.Thread(target=get_vectorstore, daemon=True).start()
