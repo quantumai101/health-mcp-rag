@@ -7,6 +7,32 @@ pydantic
 
 # ── LLM: Groq (free) ─────────────────────────────────────────
 groq
+
+# ── RAG / Vector Store ────────────────────────────────────────
+langchain
+langchain-chroma
+langchain-huggingface
+chromadb
+sentence-transformers
+
+# ── Document Loading ──────────────────────────────────────────
+pdfplumber
+rich
+
+# ── Voice (optional — uncomment if needed) ───────────────────
+# pyttsx3
+# elevenlabs
+# openai-whisper
+
+# ── Core Server ──────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+pydantic
+
+# ── LLM: Groq (free) ─────────────────────────────────────────
+groq
 google-generativeai
 
 # ── RAG / Vector Store ────────────────────────────────────────
