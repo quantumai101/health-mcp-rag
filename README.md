@@ -12,7 +12,7 @@ short_description: RAG AI portfolio chatbot · Gemini · ChromaDB · FastAPI
 
 RAG-Powered AI Portfolio · Gemini (Free) · ChromaDB · FastAPI · HuggingFace Spaces
 
-> This application IS the demonstration. Employers can chat with an AI that answers questions about your skills, experience, and health/AI knowledge — powered by real RAG architecture you built yourself.
+> This AI application IS the demonstration. Employers and Recruiters can chat with an AI that answers questions about my skills, experience, and health/AI knowledge — powered by real RAG architecture I built myself.
 
 👉 [Chat with the AI Portfolio](https://huggingface.co/spaces/aiq00479/health-mcp-rag)
 
