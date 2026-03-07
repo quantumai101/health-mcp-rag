@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI Research Demo · Zhi</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a28;
+    --border: #2a2a40;
+    --accent: #7c6af7;
+    --accent2: #4fc3f7;
+    --green: #4caf82;
+    --yellow: #f7c948;
+    --red: #f74848;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --font: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+  }
+  .header-title { font-size: 13px; letter-spacing: 0.1em; color: var(--text); }
+  .header-title span { color: var(--accent); }
+
+  /* ── Nav tabs (matches chat_ui style) ── */
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 0;
+  }
+  .nav-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover {
+    background: var(--surface2);
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .nav-tab.rag {
+    background: rgba(0,212,255,0.06);
+    border-color: rgba(0,212,255,0.25);
+    color: #00d4ff;
+  }
+  .nav-tab.rag:hover {
+    background: rgba(0,212,255,0.12);
+    color: #4fe8ff;
+    box-shadow: 0 0 12px rgba(0,212,255,0.15);
+  }
+  .nav-tab.active {
+    background: rgba(124,106,247,0.1);
+    border-color: rgba(124,106,247,0.35);
+    color: var(--accent);
+  }
+  .nav-divider {
+    width: 1px; height: 20px;
+    background: var(--border);
+    margin: 0 4px;
+  }
+
+  .badge {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    border: 1px solid var(--green);
+    padding: 3px 8px;
+    border-radius: 3px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  /* ── Layout ── */
+  .main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    height: calc(100vh - 55px);
+    overflow: hidden;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .sidebar-section { padding: 20px; border-bottom: 1px solid var(--border); }
+  .sidebar-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .tool-cards { display: flex; flex-direction: column; gap: 8px; }
+  .tool-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .tool-card:hover, .tool-card.active { border-color: var(--accent); background: #1e1e30; }
+  .tool-card-name { font-size: 11px; color: var(--accent2); margin-bottom: 3px; }
+  .tool-card-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
+  .tool-card.running .tool-card-name::after { content: ' ⟳'; color: var(--yellow); }
+  .tool-card.done    .tool-card-name::after { content: ' ✓'; color: var(--green); }
+  .tool-card.error   .tool-card-name::after { content: ' ✗'; color: var(--red); }
+  .example-queries { display: flex; flex-direction: column; gap: 6px; }
+  .example-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 10px;
+    color: var(--muted);
+    font-family: var(--font);
+    font-size: 10px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+  .example-btn:hover { color: var(--text); border-color: var(--accent); background: #1e1e30; }
+
+  /* ── Main panel ── */
+  .panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+  }
+
+  /* ── Steps trace ── */
+  .steps-pane {
+    flex: 0 0 52px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: flex-basis 0.25s ease;
+    user-select: none;
+  }
+  .steps-pane.open {
+    flex-basis: 140px;
+    overflow-y: auto;
+  }
+  .steps-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .steps-hint { font-size: 8px; color: #3a3a55; transition: color 0.2s; }
+  .steps-pane:hover .steps-hint,
+  .steps-pane.open  .steps-hint { color: var(--muted); }
+  .step-line {
+    font-size: 10px;
+    color: var(--muted);
+    padding: 2px 0 2px 8px;
+    border-left: 2px solid var(--border);
+    margin-bottom: 2px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s;
+  }
+  .step-line.router  { border-color: var(--accent);  color: var(--accent); }
+  .step-line.tool    { border-color: var(--accent2); color: var(--text); }
+  .step-line.synth   { border-color: var(--yellow);  color: var(--yellow); }
+  .step-line.respond { border-color: var(--green);   color: var(--green); }
+  .step-line.error   { border-color: var(--red);     color: var(--red); }
+
+  /* ── Answer pane ── */
+  .answer-pane {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px 260px 24px;
+    min-height: 0;
+  }
+
+  /* ── TASK 1: Placeholder — always shows description text, collapse hides the icon/extra ── */
+  .answer-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--muted);
+    text-align: center;
+    padding: 14px 24px 12px;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  /* The two description lines — always visible */
+  .ph-always {
+    font-size: 11px;
+    line-height: 1.6;
+    max-width: 560px;
+    color: var(--text);
+  }
+  .ph-always-sub {
+    font-size: 10px;
+    line-height: 1.5;
+    max-width: 560px;
+    color: var(--muted);
+  }
+  /* Collapse button row */
+  .ph-collapse-btn {
+    position: absolute;
+    top: 8px; right: 14px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 7px;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .ph-collapse-btn:hover { color: var(--text); border-color: var(--accent); }
+  /* Icon — hidden when collapsed */
+  .ph-icon {
+    font-size: 22px;
+    transition: all 0.25s;
+    overflow: hidden;
+    max-height: 40px;
+  }
+  .answer-placeholder.ph-collapsed .ph-icon {
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+  }
+  .answer-placeholder.ph-collapsed {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .answer-content { display: none; }
+  .answer-content.visible { display: block; }
+  .answer-meta { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; margin-top: 16px; }
+  .answer-tag { font-size: 10px; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 3px; border: 1px solid; }
+  .answer-tag.tools { color: var(--accent2); border-color: var(--accent2); }
+  .answer-tag.time  { color: var(--muted);   border-color: var(--border); }
+  .answer-text { font-size: 13px; line-height: 1.8; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+  .answer-text h2 { color: var(--accent); font-size: 14px; margin: 20px 0 8px; }
+  .answer-text strong { color: var(--accent2); }
+
+  /* ── TASK 2: Chat window — fixed at ~2/3 from bottom, improved drag ── */
+  .chat-window {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* 2/3 from bottom = 1/3 height from top of panel — set via JS on load */
+    width: calc(100% - 48px);
+    max-width: 900px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,106,247,0.1);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  @keyframes slideUp {
+    from { opacity:0; transform:translateX(-50%) translateY(20px); }
+    to   { opacity:1; transform:translateX(-50%) translateY(0); }
+  }
+  .chat-header {
+    background: linear-gradient(135deg, var(--accent) 0%, #5b8af7 50%, var(--accent2) 100%);
+    color: white;
+    padding: 11px 20px;
+    border-radius: 14px 14px 0 0;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+    cursor: grab;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chat-header:active { cursor: grabbing; }
+  .chat-header-hint { font-size: 9px; opacity: 0.55; }
+  .chat-body {
+    display: none;
+    overflow-y: auto;
+    max-height: 180px;
+    padding: 12px 20px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .chat-body.visible { display: block; }
+
+  /* TASK 2: Auto-expanding textarea instead of input */
+  .chat-input-container {
+    padding: 12px 16px 14px;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+    border-radius: 0 0 14px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .chat-input-field {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: none;
+    overflow-y: hidden;
+    min-height: 42px;
+    max-height: 160px;
+    line-height: 1.5;
+    display: block;
+  }
+  .chat-input-field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,106,247,0.15); }
+  .chat-input-field::placeholder { color: #555566; }
+  .chat-send-btn {
+    flex-shrink: 0;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    color: white;
+    font-family: var(--font);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    height: 42px;
+    align-self: flex-end;
+  }
+  .chat-send-btn:hover  { background: #6a58e0; }
+  .chat-send-btn:active { transform: scale(0.97); }
+  .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Loading bar ── */
+  .loading-bar {
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+    background-size: 200%;
+    animation: shimmer 1.2s linear infinite;
+    display: none;
+  }
+  .loading-bar.active { display: block; }
+  @keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── Markdown ── */
+  .md-h2   { color:var(--accent);  font-size:14px; font-weight:bold; margin:18px 0 6px; display:block; }
+  .md-h3   { color:var(--accent2); font-size:13px; font-weight:bold; margin:14px 0 4px; display:block; }
+  .md-bold { color:var(--accent2); font-weight:bold; }
+  .md-code { background:var(--surface2); color:var(--accent2); padding:1px 5px; border-radius:3px; font-size:11px; }
+
+  @media (max-width:768px) {
+    .main { grid-template-columns:1fr; grid-template-rows:auto 1fr; }
+    .sidebar { max-height:260px; flex-direction:row; overflow-x:auto; }
+    .chat-window { width:calc(100% - 16px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">AGENTIC AI DEMO · <span>BCI / HUMAN AUGMENTATION RESEARCH</span></div>
+  <nav class="header-nav">
+    <a class="nav-tab rag" href="/">
+      🏠 RAG PORTFOLIO
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-tab active" href="/agent-demo">
+      🤖 AGENTIC AI DEMO
+    </a>
+  </nav>
+  <div class="badge">AGENT LIVE</div>
+</div>
+
+<div class="loading-bar" id="loadingBar"></div>
+
+<div class="main">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Available Tools</div>
+      <div class="tool-cards">
+        <div class="tool-card" id="tool-route">
+          <div class="tool-card-name">🔀 route_research_query</div>
+          <div class="tool-card-desc">Analyses query and selects optimal tool sequence</div>
+        </div>
+        <div class="tool-card" id="tool-bci">
+          <div class="tool-card-name">🧠 search_ai_bci_research</div>
+          <div class="tool-card-desc">BCI, neural interfaces, carbon-silicon hybrid body</div>
+        </div>
+        <div class="tool-card" id="tool-hardware">
+          <div class="tool-card-name">💻 search_edge_hardware</div>
+          <div class="tool-card-desc">M4/M5, neuromorphic chips, edge AI devices</div>
+        </div>
+        <div class="tool-card" id="tool-interface">
+          <div class="tool-card-name">🤝 search_human_ai_interface</div>
+          <div class="tool-card-desc">HCI, AR/VR, multimodal, embodied AI</div>
+        </div>
+        <div class="tool-card" id="tool-web">
+          <div class="tool-card-name">🔍 web_search_latest</div>
+          <div class="tool-card-desc">Live web search for latest AI tech news</div>
+        </div>
+        <div class="tool-card" id="tool-synth">
+          <div class="tool-card-name">📋 synthesise_findings</div>
+          <div class="tool-card-desc">Combines multi-source results into research report</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-section" style="flex:1;overflow-y:auto;">
+      <div class="sidebar-label">Example Queries</div>
+      <div class="example-queries">
+        <button class="example-btn" onclick="setQuery(this.textContent)">Latest BCI breakthroughs for transforming carbon-based humans with silicon AI interfaces</button>
+        <button class="example-btn" onclick="setQuery(this.textContent)">How can Apple M4/M5 devices power neuromorphic brain-computer interfaces?</button>
+        <button class="example-btn" onclick="setQuery(this.textContent)">Latest multimodal human-AI machine interfaces using AR/VR and neural implants</button>
+        <button class="example-btn" onclick="setQuery(this.textContent)">Neuralink alternatives and next-gen neural implant technologies 2025</button>
+        <button class="example-btn" onclick="setQuery(this.textContent)">Edge AI hardware for wearable and implantable human augmentation devices</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main panel -->
+  <div class="panel" id="mainPanel">
+
+    <!-- Steps trace -->
+    <div class="steps-pane" id="stepsPane" onclick="toggleSteps()">
+      <div class="steps-label">
+        Agent Reasoning Trace
+        <span class="steps-hint" id="stepsHint">▾ click to expand</span>
+      </div>
+      <div id="stepsContainer">
+        <div class="step-line" style="color:#444466;border-color:#2a2a40;">Waiting for query…</div>
+      </div>
+    </div>
+
+    <!-- Answer area -->
+    <div class="answer-pane">
+
+      <!-- TASK 1: Placeholder — description always visible, only icon collapses -->
+      <div class="answer-placeholder" id="placeholder">
+        <button class="ph-collapse-btn" id="phCollapseBtn" onclick="togglePlaceholder(event)">▴ COLLAPSE</button>
+        <div class="ph-icon">🧬</div>
+        <p class="ph-always">Ask about BCI, human augmentation, edge AI hardware, or human-machine interfaces.</p>
+        <p class="ph-always-sub">The agent routes your query to the best tools, shows reasoning, and synthesises a report.</p>
+      </div>
+
+      <div class="answer-content" id="answerContent">
+        <div class="answer-meta" id="answerMeta"></div>
+        <div class="answer-text"  id="answerText"></div>
+      </div>
+    </div>
+
+    <!-- Chat window — draggable, positioned at 1/3 from top (~2/3 from bottom) -->
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header" id="chatHeader">
+        <span>🤖 AI Research Agent</span>
+        <span class="chat-header-hint">drag to reposition</span>
+      </div>
+      <div class="chat-body" id="chatBody"></div>
+      <div class="chat-input-container">
+        <textarea
+          class="chat-input-field"
+          id="chatInput"
+          placeholder="Ask about neural interfaces, edge AI, human augmentation…"
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="chat-send-btn" id="chatSendBtn" onclick="runResearch()">▶ RESEARCH</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   TASK 1 — Placeholder toggle
+   Description lines always stay visible;
+   only the icon and extra padding collapse.
+══════════════════════════════════════════ */
+function togglePlaceholder(e) {
+  if (e) e.stopPropagation();
+  const ph  = document.getElementById("placeholder");
+  const btn = document.getElementById("phCollapseBtn");
+  const collapsed = ph.classList.toggle("ph-collapsed");
+  btn.textContent = collapsed ? "▾ EXPAND" : "▴ COLLAPSE";
+}
+
+/* ══════════════════════════════════════════
+   TASK 2 — Auto-resize textarea
+══════════════════════════════════════════ */
+function autoResize(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 160) + "px";
+  el.style.overflowY = el.scrollHeight > 160 ? "auto" : "hidden";
+}
+
+function handleKey(e) {
+  // Enter sends, Shift+Enter adds new line
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    runResearch();
+  }
+}
+
+/* ══════════════════════════════════════════
+   TASK 2 — Position chat at ~1/3 from top
+   (i.e. 2/3 from bottom) on load & resize
+══════════════════════════════════════════ */
+const cw = document.getElementById("chatWindow");
+const pn = document.getElementById("mainPanel");
+
+function positionChat() {
+  const pr = pn.getBoundingClientRect();
+  const targetTop = pr.height * 0.33;
+  cw.style.top       = targetTop + "px";
+  cw.style.bottom    = "auto";
+  cw.style.left      = "50%";
+  cw.style.transform = "translateX(-50%)";
+}
+
+window.addEventListener("load",   positionChat);
+window.addEventListener("resize", positionChat);
+
+/* ══════════════════════════════════════════
+   TASK 2 — Drag logic (fixed)
+   Uses top/left absolute positioning;
+   transform only for horizontal centering
+   when not dragged.
+══════════════════════════════════════════ */
+let dragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+let hasDragged  = false;
+
+document.getElementById("chatHeader").addEventListener("mousedown", function(e) {
+  dragging    = true;
+  hasDragged  = false;
+  const cwRect = cw.getBoundingClientRect();
+  const prRect = pn.getBoundingClientRect();
+  // Convert current position to top/left within panel
+  const currentLeft = cwRect.left - prRect.left;
+  const currentTop  = cwRect.top  - prRect.top;
+  cw.style.left      = currentLeft + "px";
+  cw.style.top       = currentTop  + "px";
+  cw.style.transform = "none";
+  cw.style.bottom    = "auto";
+  cw.style.transition = "none";
+
+  dragOffsetX = e.clientX - cwRect.left;
+  dragOffsetY = e.clientY - cwRect.top;
+
+  document.addEventListener("mousemove", onDragMove);
+  document.addEventListener("mouseup",   onDragUp);
+  e.preventDefault();
+});
+
+function onDragMove(e) {
+  if (!dragging) return;
+  hasDragged = true;
+  const pr = pn.getBoundingClientRect();
+  let x = e.clientX - pr.left - dragOffsetX;
+  let y = e.clientY - pr.top  - dragOffsetY;
+  x = Math.max(0, Math.min(x, pr.width  - cw.offsetWidth));
+  y = Math.max(0, Math.min(y, pr.height - cw.offsetHeight));
+  cw.style.left = x + "px";
+  cw.style.top  = y + "px";
+}
+
+function onDragUp(e) {
+  dragging = false;
+  cw.style.transition = "";
+  document.removeEventListener("mousemove", onDragMove);
+  document.removeEventListener("mouseup",   onDragUp);
+}
+
+/* ══════════════════════════════════════════
+   Steps toggle
+══════════════════════════════════════════ */
+function toggleSteps() {
+  const pane = document.getElementById("stepsPane");
+  const hint = document.getElementById("stepsHint");
+  pane.classList.toggle("open");
+  hint.textContent = pane.classList.contains("open") ? "▴ click to collapse" : "▾ click to expand";
+}
+
+/* ══════════════════════════════════════════
+   Tool helpers
+══════════════════════════════════════════ */
+function setQuery(t) {
+  const inp = document.getElementById("chatInput");
+  inp.value = t.trim();
+  autoResize(inp);
+  inp.focus();
+}
+function resetToolCards() {
+  document.querySelectorAll(".tool-card").forEach(c => c.classList.remove("active","running","done","error"));
+}
+function setToolState(name, state) {
+  const m = {
+    route_research_query: "tool-route",
+    search_ai_bci_research: "tool-bci",
+    search_edge_hardware: "tool-hardware",
+    search_human_ai_interface: "tool-interface",
+    web_search_latest: "tool-web",
+    synthesise_findings: "tool-synth"
+  };
+  const el = document.getElementById(m[name]);
+  if (el) { el.classList.remove("active","running","done","error"); el.classList.add(state); }
+}
+
+/* ══════════════════════════════════════════
+   Step renderer
+══════════════════════════════════════════ */
+function renderStep(text) {
+  const d = document.createElement("div");
+  d.className = "step-line";
+  if      (text.includes("Router")||text.includes("🔀")) { d.classList.add("router");  setToolState("route_research_query","done"); }
+  else if (text.includes("synthesise")||text.includes("🔬")) { d.classList.add("synth"); setToolState("synthesise_findings","running"); }
+  else if (text.includes("respond")||text.includes("💬"))    { d.classList.add("respond"); setToolState("synthesise_findings","done"); }
+  else if (text.includes("✅")) { d.classList.add("tool"); const m=text.match(/`([a-z_]+)`/); if(m) setToolState(m[1],"done"); }
+  else if (text.includes("❌")) { d.classList.add("error"); const m=text.match(/`([a-z_]+)`/); if(m) setToolState(m[1],"error"); }
+  else if (text.includes("⚙️")||text.includes("Searching")) { d.classList.add("tool"); const m=text.match(/\*\*([a-z_]+)\*\*/); if(m) setToolState(m[1],"running"); }
+  else { d.classList.add("tool"); }
+  d.innerHTML = text
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/`(.+?)`/g,'<code style="color:#4fc3f7;background:#1a1a28;padding:1px 4px;border-radius:3px;font-size:10px;">$1</code>');
+  return d;
+}
+
+function renderAnswer(text) {
+  return text
+    .replace(/^## (.+)$/gm,'<span class="md-h2">$1</span>')
+    .replace(/^### (.+)$/gm,'<span class="md-h3">$1</span>')
+    .replace(/\*\*(.+?)\*\*/g,'<span class="md-bold">$1</span>')
+    .replace(/`(.+?)`/g,'<span class="md-code">$1</span>');
+}
+
+/* ══════════════════════════════════════════
+   Research call
+══════════════════════════════════════════ */
+async function runResearch() {
+  const inp   = document.getElementById("chatInput");
+  const query = inp.value.trim();
+  if (!query) return;
+
+  resetToolCards();
+  setToolState("route_research_query","running");
+
+  const stepsPane = document.getElementById("stepsPane");
+  const stepsCont = document.getElementById("stepsContainer");
+  if (!stepsPane.classList.contains("open")) toggleSteps();
+  stepsCont.innerHTML = '<div class="step-line router">🔀 Routing query…</div>';
+
+  document.getElementById("answerContent").classList.remove("visible");
+  document.getElementById("loadingBar").classList.add("active");
+  document.getElementById("chatSendBtn").disabled = true;
+
+  const chatBody = document.getElementById("chatBody");
+  chatBody.innerHTML = `<div style="color:var(--muted);font-size:11px;margin-bottom:6px;">You: ${query}</div><div style="color:var(--yellow);font-size:11px;">⟳ Researching…</div>`;
+  chatBody.classList.add("visible");
+  inp.value = "";
+  autoResize(inp);
+
+  const t0 = Date.now();
+  try {
+    const r = await fetch("/research", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({query})
+    });
+    if (!r.ok) throw new Error(`Server error: ${r.status}`);
+    const data    = await r.json();
+    const elapsed = ((Date.now()-t0)/1000).toFixed(1);
+
+    stepsCont.innerHTML = "";
+    (data.steps||[]).forEach(s => stepsCont.appendChild(renderStep(s)));
+    (data.tools_used||[]).forEach(t => setToolState(t,"done"));
+
+    const brief = (data.answer||"").replace(/<[^>]+>/g,"").split(/\s+/).slice(0,40).join(" ");
+    chatBody.innerHTML = `
+      <div style="color:var(--muted);font-size:11px;margin-bottom:4px;">You: ${query}</div>
+      <div style="color:var(--green);font-size:11px;margin-bottom:6px;">✓ Done · ${elapsed}s</div>
+      <div style="color:var(--text);font-size:11px;line-height:1.5;">${brief}…</div>
+      <div style="margin-top:8px;color:var(--accent);font-size:10px;">↑ Full report above ↑</div>`;
+
+    document.getElementById("answerMeta").innerHTML =
+      `<span class="answer-tag tools">Tools: ${(data.tools_used||[]).join(" → ")}</span>
+       <span class="answer-tag time">${elapsed}s</span>`;
+    document.getElementById("answerText").innerHTML = renderAnswer(data.answer||"No answer returned.");
+    document.getElementById("answerContent").classList.add("visible");
+
+  } catch(err) {
+    stepsCont.innerHTML = `<div class="step-line error">❌ ${err.message}</div>`;
+    chatBody.innerHTML  = `<div style="color:var(--red);font-size:11px;">❌ ${err.message}</div>`;
+    document.getElementById("answerText").textContent = `Error: ${err.message}`;
+    document.getElementById("answerContent").classList.add("visible");
+  } finally {
+    document.getElementById("loadingBar").classList.remove("active");
+    document.getElementById("chatSendBtn").disabled = false;
+    inp.focus();
+  }
+}
+</script>
+</body>
+</html>

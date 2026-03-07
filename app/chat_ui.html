@@ -220,9 +220,7 @@
     line-height: 1.6;
   }
 
-  .footer-text span {
-    color: var(--accent2);
-  }
+  .footer-text span { color: var(--accent2); }
 
   /* ── MAIN CHAT ── */
   .main {
@@ -238,10 +236,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 28px;
+    padding: 0 28px;
     border-bottom: 1px solid var(--border);
     background: rgba(13,17,23,0.8);
     backdrop-filter: blur(10px);
+    height: 56px;
+    gap: 16px;
   }
 
   .topbar-left {
@@ -262,6 +262,63 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--muted);
+  }
+
+  /* ── NAV TABS ── */
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+  }
+
+  .nav-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-tab:hover {
+    background: var(--bg3);
+    color: var(--text);
+    border-color: var(--border);
+  }
+
+  .nav-tab.active {
+    background: var(--tag-bg);
+    border-color: rgba(0,212,255,0.3);
+    color: var(--accent);
+  }
+
+  .nav-tab.agent {
+    background: rgba(124,106,247,0.08);
+    border-color: rgba(124,106,247,0.3);
+    color: #a89cf7;
+  }
+
+  .nav-tab.agent:hover {
+    background: rgba(124,106,247,0.15);
+    color: #c4b8ff;
+    box-shadow: 0 0 12px rgba(124,106,247,0.2);
+  }
+
+  .nav-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    margin: 0 4px;
   }
 
   .topbar-actions {
@@ -349,6 +406,57 @@
     color: var(--muted);
     max-width: 480px;
     line-height: 1.7;
+  }
+
+  /* ── AGENT DEMO PROMO CARD ── */
+  .agent-promo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(124,106,247,0.06);
+    border: 1px solid rgba(124,106,247,0.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+    max-width: 600px;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .agent-promo:hover {
+    background: rgba(124,106,247,0.12);
+    border-color: rgba(124,106,247,0.5);
+    box-shadow: 0 0 20px rgba(124,106,247,0.15);
+    transform: translateY(-1px);
+  }
+
+  .agent-promo-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .agent-promo-text { flex: 1; text-align: left; }
+
+  .agent-promo-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #a89cf7;
+    margin-bottom: 3px;
+  }
+
+  .agent-promo-desc {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.5;
+  }
+
+  .agent-promo-arrow {
+    font-size: 16px;
+    color: #a89cf7;
+    opacity: 0.7;
   }
 
   .suggested-grid {
@@ -464,7 +572,7 @@
     white-space: pre-wrap;
   }
 
-  /* ── MARKDOWN STYLES inside AI bubble ── */
+  /* ── MARKDOWN STYLES ── */
   .msg.ai .msg-bubble h1,
   .msg.ai .msg-bubble h2,
   .msg.ai .msg-bubble h3,
@@ -479,32 +587,12 @@
   .msg.ai .msg-bubble h2 { font-size: 15px; }
   .msg.ai .msg-bubble h3 { font-size: 14px; color: var(--accent2); }
   .msg.ai .msg-bubble h4 { font-size: 13px; color: var(--text); }
-
-  .msg.ai .msg-bubble p {
-    margin: 6px 0;
-    line-height: 1.7;
-  }
-
+  .msg.ai .msg-bubble p { margin: 6px 0; line-height: 1.7; }
   .msg.ai .msg-bubble ul,
-  .msg.ai .msg-bubble ol {
-    margin: 6px 0 6px 20px;
-  }
-
-  .msg.ai .msg-bubble li {
-    margin: 4px 0;
-    line-height: 1.6;
-  }
-
-  .msg.ai .msg-bubble strong {
-    color: var(--accent2);
-    font-weight: 600;
-  }
-
-  .msg.ai .msg-bubble em {
-    color: var(--muted);
-    font-style: italic;
-  }
-
+  .msg.ai .msg-bubble ol { margin: 6px 0 6px 20px; }
+  .msg.ai .msg-bubble li { margin: 4px 0; line-height: 1.6; }
+  .msg.ai .msg-bubble strong { color: var(--accent2); font-weight: 600; }
+  .msg.ai .msg-bubble em { color: var(--muted); font-style: italic; }
   .msg.ai .msg-bubble code {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
@@ -514,7 +602,6 @@
     padding: 1px 5px;
     color: var(--accent);
   }
-
   .msg.ai .msg-bubble pre {
     background: #060a0e;
     border: 1px solid var(--border);
@@ -523,47 +610,26 @@
     overflow-x: auto;
     margin: 10px 0;
   }
-
   .msg.ai .msg-bubble pre code {
-    background: transparent;
-    border: none;
-    padding: 0;
-    color: var(--accent2);
-    font-size: 12px;
+    background: transparent; border: none; padding: 0;
+    color: var(--accent2); font-size: 12px;
   }
-
   .msg.ai .msg-bubble blockquote {
     border-left: 3px solid var(--accent);
-    padding-left: 12px;
-    margin: 8px 0;
-    color: var(--muted);
-    font-style: italic;
+    padding-left: 12px; margin: 8px 0;
+    color: var(--muted); font-style: italic;
   }
-
-  .msg.ai .msg-bubble hr {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 12px 0;
-  }
-
-  .msg.ai .msg-bubble a {
-    color: var(--accent);
-    text-decoration: none;
-  }
+  .msg.ai .msg-bubble hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+  .msg.ai .msg-bubble a { color: var(--accent); text-decoration: none; }
   .msg.ai .msg-bubble a:hover { text-decoration: underline; }
 
   .msg-sources {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 8px;
+    display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px;
   }
 
   .source-chip {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    padding: 2px 8px;
-    border-radius: 3px;
+    font-size: 9px; padding: 2px 8px; border-radius: 3px;
     background: rgba(0,255,157,0.06);
     border: 1px solid rgba(0,255,157,0.15);
     color: var(--accent2);
@@ -571,21 +637,14 @@
 
   .msg-latency {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--muted2);
-    margin-top: 4px;
+    font-size: 9px; color: var(--muted2); margin-top: 4px;
   }
 
   /* ── TYPING ── */
-  .typing-indicator {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
+  .typing-indicator { display: flex; gap: 14px; align-items: flex-start; }
 
   .typing-dots {
-    display: flex;
-    gap: 5px;
+    display: flex; gap: 5px;
     padding: 16px 18px;
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -594,12 +653,10 @@
   }
 
   .typing-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
+    width: 7px; height: 7px; border-radius: 50%;
     background: var(--accent);
     animation: typingBounce 1.2s ease infinite;
   }
-
   .typing-dot:nth-child(2) { animation-delay: 0.15s; }
   .typing-dot:nth-child(3) { animation-delay: 0.30s; }
 
@@ -617,9 +674,7 @@
   }
 
   .input-row {
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
+    display: flex; gap: 10px; align-items: flex-end;
     background: var(--bg2);
     border: 1px solid var(--border);
     border-radius: 10px;
@@ -633,41 +688,23 @@
   }
 
   .chat-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-    resize: none;
-    max-height: 120px;
-    min-height: 24px;
+    flex: 1; background: transparent; border: none; outline: none;
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; line-height: 1.6; resize: none;
+    max-height: 120px; min-height: 24px;
   }
 
   .chat-input::placeholder { color: var(--muted); }
 
-  .input-actions {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
+  .input-actions { display: flex; gap: 6px; align-items: center; }
 
   .deep-toggle {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    display: flex; align-items: center; gap: 5px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--muted);
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background: transparent;
-    transition: all 0.2s;
-    white-space: nowrap;
+    font-size: 9px; color: var(--muted); cursor: pointer;
+    padding: 4px 8px; border-radius: 4px;
+    border: 1px solid var(--border); background: transparent;
+    transition: all 0.2s; white-space: nowrap;
   }
 
   .deep-toggle.on {
@@ -677,18 +714,11 @@
   }
 
   .send-btn {
-    width: 36px; height: 36px;
-    border-radius: 7px;
-    border: none;
+    width: 36px; height: 36px; border-radius: 7px; border: none;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #080c10;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    transition: all 0.2s;
-    flex-shrink: 0;
+    color: #080c10; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all 0.2s; flex-shrink: 0;
   }
 
   .send-btn:hover { transform:scale(1.05); box-shadow: 0 0 16px rgba(0,212,255,0.4); }
@@ -696,10 +726,7 @@
 
   .input-hint {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--muted2);
-    margin-top: 8px;
-    text-align: center;
+    font-size: 9px; color: var(--muted2); margin-top: 8px; text-align: center;
   }
 
   /* ── SCROLLBAR ── */
@@ -711,6 +738,7 @@
   @media (max-width: 700px) {
     .sidebar { display: none; }
     .suggested-grid { grid-template-columns: 1fr; }
+    .nav-tab span.nav-label { display: none; }
   }
 </style>
 </head>
@@ -796,6 +824,18 @@
       <div class="topbar-title">HEALTH MCP RAG · AI PORTFOLIO</div>
       <div class="topbar-sub" id="session-info">Session <span id="session-date"></span> · <span id="chroma-status">checking...</span></div>
     </div>
+
+    <!-- NAV TABS -->
+    <nav class="topbar-nav">
+      <a class="nav-tab active" href="/">
+        🏠 <span class="nav-label">RAG PORTFOLIO</span>
+      </a>
+      <div class="nav-divider"></div>
+      <a class="nav-tab agent" href="/agent-demo">
+        🤖 <span class="nav-label">AGENTIC AI DEMO</span>
+      </a>
+    </nav>
+
     <div class="topbar-actions">
       <button class="icon-btn" onclick="clearChat()" title="Clear chat">🗑</button>
       <button class="icon-btn" onclick="triggerIngest()" title="Re-index documents">⟳</button>
@@ -807,6 +847,17 @@
       <div class="welcome-icon">🧬</div>
       <h1>Hello. I'm your AI Portfolio.</h1>
       <p>I'm powered by RAG + MCP architecture and trained on health, aged care, and AI knowledge. Ask me anything about the candidate's skills, experience, or technical capabilities.</p>
+
+      <!-- Agent Demo promo card -->
+      <a class="agent-promo" href="/agent-demo">
+        <div class="agent-promo-icon">🤖</div>
+        <div class="agent-promo-text">
+          <div class="agent-promo-title">→ Try the Agentic AI Demo</div>
+          <div class="agent-promo-desc">Multi-tool routing · LangGraph · BCI / human augmentation research · live reasoning trace</div>
+        </div>
+        <div class="agent-promo-arrow">↗</div>
+      </a>
+
       <div class="suggested-grid">
         <button class="suggest-btn" onclick="sendSuggested(this)">
           <span class="suggest-icon">💼</span>
@@ -839,9 +890,7 @@
         oninput="autoResize(this)"
       ></textarea>
       <div class="input-actions">
-        <button class="deep-toggle" id="deep-toggle" onclick="toggleDeep()">
-          ◈ DEEP
-        </button>
+        <button class="deep-toggle" id="deep-toggle" onclick="toggleDeep()">◈ DEEP</button>
         <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
       </div>
     </div>
@@ -850,13 +899,8 @@
 </main>
 
 <script>
-  // ── Configure marked.js ──
-  marked.setOptions({
-    breaks: true,       // line breaks become <br>
-    gfm: true,          // GitHub Flavored Markdown
-  });
+  marked.setOptions({ breaks: true, gfm: true });
 
-  // ── STATE ──
   let history = [];
   let deepMode = false;
   let currentMode = 'portfolio';
@@ -867,7 +911,6 @@
     technical: "Ask about RAG, MCP, ChromaDB, LangChain, FastAPI, LLMs…"
   };
 
-  // ── INIT ──
   document.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     document.getElementById('session-date').textContent =
@@ -890,7 +933,6 @@
     }
   }
 
-  // ── MODES ──
   function setMode(mode) {
     currentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -898,7 +940,6 @@
     document.getElementById('chat-input').placeholder = modePrompts[mode];
   }
 
-  // ── DEEP TOGGLE ──
   function toggleDeep() {
     deepMode = !deepMode;
     const btn = document.getElementById('deep-toggle');
@@ -906,17 +947,13 @@
     btn.textContent = deepMode ? '◈ DEEP ON' : '◈ DEEP';
   }
 
-  // ── INPUT ──
   function autoResize(el) {
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 120) + 'px';
   }
 
   function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   }
 
   function sendSuggested(btn) {
@@ -924,7 +961,6 @@
     sendMessage();
   }
 
-  // ── SEND ──
   async function sendMessage() {
     const input = document.getElementById('chat-input');
     const text = input.value.trim();
@@ -946,19 +982,12 @@
       const res = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text,
-          deep: deepMode,
-          conversation_history: history.slice(-10)
-        })
+        body: JSON.stringify({ text, deep: deepMode, conversation_history: history.slice(-10) })
       });
-
       const data = await res.json();
       removeTyping(typingId);
-
       appendMessage('ai', data.reply, data.sources, data.latency_ms);
       history.push({ role: 'assistant', content: data.reply });
-
     } catch(e) {
       removeTyping(typingId);
       appendMessage('ai', '⚠️ Connection error. Is the server running?\n\nRun: python app/server.py', [], 0);
@@ -968,7 +997,6 @@
     input.focus();
   }
 
-  // ── RENDER MESSAGES ──
   function appendMessage(role, text, sources=[], latency=0) {
     const wrap = document.getElementById('messages');
     const isAI = role === 'ai';
@@ -977,10 +1005,7 @@
     const div = document.createElement('div');
     div.className = `msg ${role}`;
 
-    // AI messages: render markdown. User messages: plain text (escaped)
-    const bubbleContent = isAI
-      ? marked.parse(text)
-      : escapeHtml(text);
+    const bubbleContent = isAI ? marked.parse(text) : escapeHtml(text);
 
     const sourcesHTML = (sources && sources.length)
       ? `<div class="msg-sources">${sources.map(s => `<span class="source-chip">📄 ${s}</span>`).join('')}</div>`
@@ -1016,9 +1041,7 @@
     div.innerHTML = `
       <div class="msg-avatar" style="background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(0,255,157,0.1));border:1px solid rgba(0,212,255,0.25);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;">🧬</div>
       <div class="typing-dots">
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
+        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
       </div>
     `;
     wrap.appendChild(div);
@@ -1042,6 +1065,14 @@
       <div class="welcome-icon">🧬</div>
       <h1>Hello. I'm your AI Portfolio.</h1>
       <p>I'm powered by RAG + MCP architecture and trained on health, aged care, and AI knowledge. Ask me anything about the candidate's skills, experience, or technical capabilities.</p>
+      <a class="agent-promo" href="/agent-demo">
+        <div class="agent-promo-icon">🤖</div>
+        <div class="agent-promo-text">
+          <div class="agent-promo-title">→ Try the Agentic AI Demo</div>
+          <div class="agent-promo-desc">Multi-tool routing · LangGraph · BCI / human augmentation research · live reasoning trace</div>
+        </div>
+        <div class="agent-promo-arrow">↗</div>
+      </a>
       <div class="suggested-grid">
         <button class="suggest-btn" onclick="sendSuggested(this)"><span class="suggest-icon">💼</span>What AI projects has the candidate built?</button>
         <button class="suggest-btn" onclick="sendSuggested(this)"><span class="suggest-icon">🏥</span>How does their AI work apply to aged care?</button>
@@ -1064,9 +1095,7 @@
 
   function escapeHtml(text) {
     return text
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
       .replace(/\n/g,'<br>');
   }
 </script>
