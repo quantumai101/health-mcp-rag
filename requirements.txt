@@ -12,7 +12,7 @@ groq
 langchain
 langchain-chroma
 langchain-huggingface
-chromadb==0.5.23
+chromadb==0.6.3
 sentence-transformers
 
 # ── Document Loading ──────────────────────────────────────────
