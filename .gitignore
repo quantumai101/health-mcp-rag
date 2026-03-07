@@ -37,3 +37,5 @@ tmp/
 .vscode/settings.json
 .idea/
 *.swp
+
+chroma_db/
