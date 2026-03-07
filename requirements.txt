@@ -38,6 +38,7 @@ google-generativeai
 # ── RAG / Vector Store ────────────────────────────────────────
 langchain
 langchain-chroma
+langchain-text-splitters
 langchain-huggingface
 chromadb
 sentence-transformers
