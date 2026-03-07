@@ -1,0 +1,62 @@
+“I’m envisioning a modular ML pipeline built around rapid experimentation and high-performance deployment. Data ingestion and preprocessing would be handled in Python, with versioning via DVC and orchestration using lightweight containerized jobs. Model development would center on PyTorch for flexibility, converting to ONNX for cross-platform portability, and optimizing with TensorRT for GPU-accelerated inference. The entire workflow would run on a Linux-based environment, with Docker for reproducibility and scalability. This setup allows fast iteration on research ideas while keeping a clear path to production-grade integration.”
+
+Below is a focused “interview‑ready” version of the pipeline, emphasising exactly the three things you mentioned: ONNX export tricks, TensorRT builder flags, and multi‑model service design. You can almost read this out loud at the whiteboard.
+
+1. ONNX export tricks (PyTorch → ONNX that production likes)
+Key ideas you can explicitly mention:
+
+Use a fixed opset (e.g. 17) for Triton/TensorRT compatibility.
+
+Make batch dimension dynamic so one engine handles varying batch sizes.
+
+Freeze everything else to avoid surprises in latency/throughput.
+
+In words (30–40 s explanation):
+
+“I always lock opset_version to something we know works well with TensorRT, typically 17. I keep only the batch dimension dynamic via dynamic_axes so Triton/TensorRT can batch efficiently, but spatial dimensions stay fixed for more predictable performance. I also enable constant folding so things like BatchNorm are baked into the weights, which simplifies the graph and improves inference.”
+
+2. TensorRT builder flags (how you squeeze performance safely)
+Here you want to show you understand config flags and how they relate to latency/accuracy trade‑off.
+
+Talking points:
+
+“At build time I use EXPLICIT_BATCH mode and set a generous workspace so TensorRT can explore more tactics.”
+
+
+“I usually enable FP16 by default; if we have a good INT8 calibration pipeline, I also set INT8 so TensorRT can choose per‑layer precision for best performance, falling back where needed.”
+
+“If the model has structured‑sparse weights, I also set SPARSE_WEIGHTS so TensorRT can leverage that on Ampere+ GPUs. After building I always run a small accuracy bench vs. the PyTorch baseline to verify there’s no unacceptable drift.”
+
+3. Multi‑model service design (how many models live together)
+Instead of one model per service, you want to show you can design a multi‑model GPU service, which is exactly what Triton is made for.
+
+3.1 Concept (what you say)
+“In production we rarely have just one model. For a mining site we might have:
+
+a safety helmet detector,
+
+a vehicle proximity detector,
+
+and a scene classifier running on the same camera feed.
+
+To avoid spinning up separate GPU services for each model, I prefer a multi‑model design, either using NVIDIA Triton or a custom FastAPI/gRPC service that loads several TensorRT engines into the same process.
+
+Each model becomes a ‘component’ with a clear interface, and the service routes requests by model_name. This reduces operational overhead and improves GPU utilisation.”
+
+How to pitch this in the interview:
+
+“I design the service so multiple TensorRT engines can be hot‑loaded in one process. At startup we load the helmet, vehicle, and scene models. The client simply passes model_name, and the service routes the image to the correct engine. In a more advanced setup I would replace this custom server with Triton, using its model repository and dynamic batching to maximise GPU utilisation while keeping a single HTTP/gRPC endpoint.”
+
+If you want, I can help you turn this into a 2–3 minute “walkthrough story” you can use when they ask: ‘Tell us how you’d take an arXiv vision model and make it run efficiently at a mine site with multiple models on one GPU.’
+
+Follow-ups
+
+Common pitfalls in ONNX export with dynamic shapes
+
+TensorRT INT8 calibration steps and examples
+
+Triton model repository config best practices
+
+Compare Triton vs KServe for multi-model serving
+
+Benchmark FP16 vs INT8 performance in TensorRT

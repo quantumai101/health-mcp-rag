@@ -1,0 +1,372 @@
+Top 20 STAR Interview Q&A for Orica (Machine Learning Engineer)
+(Machine Learning • PyTorch • ONNX • TensorRT • Computer Vision • GPU inference • Research → Production)
+
+1. Tell us about a time you rapidly iterated on an ML solution.
+
+Situation: I was working on a computer vision defect‑detection model where the first prototype underperformed in real‑world lighting conditions.
+
+Task: My responsibility was to quickly improve accuracy while keeping inference under 10 ms on an edge GPU.
+
+Action: I set up a rapid‑iteration loop:
+- Ran small ablation studies daily
+- Tested augmentations inspired by recent arXiv papers
+- Converted models to ONNX and TensorRT for fast benchmarking
+- Automated evaluation scripts to shorten iteration cycles
+
+Result: Within one week, accuracy improved by 18%, inference latency dropped from 22 ms → 7 ms, and the model was deployed to production.
+
+---
+
+2. Describe a time you implemented a model directly from a research paper.
+
+Situation: We needed a lightweight segmentation model for a mobile robotics project.
+
+Task: I was tasked with implementing a novel architecture published on arXiv that had no official code.
+
+Action: I:
+- Broke down the paper's architecture diagrams
+- Reproduced the layers in PyTorch
+- Verified intermediate outputs against the paper's tables
+- Optimised it using ONNX + TensorRT for deployment
+
+Result: The model matched the paper's reported IoU within 1.5%, and inference ran 3× faster than our previous baseline.
+
+---
+
+3. Tell us about a time you optimised GPU inference performance.
+
+Situation: A real‑time detection system was bottlenecked at inference.
+
+Task: I needed to reduce latency without sacrificing accuracy.
+
+Action: I:
+- Profiled the pipeline using Nsight
+- Identified redundant CPU–GPU transfers
+- Fused layers using TensorRT
+- Quantised the model to FP16
+
+Result: Latency improved from 40 ms → 11 ms, enabling real‑time processing at 90 FPS.
+
+---
+
+4. Give an example of troubleshooting a performance bottleneck.
+
+Situation: A PyTorch model slowed dramatically during batch inference.
+
+Task: Find and fix the bottleneck.
+
+Action: I used PyTorch profiler and discovered a custom Python post‑processing step running on CPU.
+
+Result: After rewriting it in CUDA kernels, throughput improved 5×.
+
+---
+
+5. Describe a time you integrated ML into a production workflow.
+
+Situation: Our team needed to integrate a vision model into a cloud‑based inspection pipeline.
+
+Task: I owned the ML component end‑to‑end.
+
+Action: I:
+- Containerised the model with Docker
+- Exposed inference via a gRPC service
+- Added monitoring hooks for drift detection
+- Wrote reproducible deployment documentation
+
+Result: The service achieved 99.9% uptime and processed millions of images monthly.
+
+---
+
+6. Tell us about a time you worked in an ambiguous, research‑heavy environment.
+
+Situation: We were exploring a new anomaly‑detection approach with no clear direction.
+
+Task: Define a path forward.
+
+Action: I proposed a structured exploration plan:
+- Surveyed recent arXiv papers
+- Built 3 prototypes
+- Benchmarked them on synthetic and real data
+
+Result: One prototype outperformed the existing method by 25%, becoming the new baseline.
+
+---
+
+7. Describe a time you collaborated with cross‑functional stakeholders.
+
+Situation: A product team needed ML support for a new feature.
+
+Task: Translate technical constraints into product decisions.
+
+Action: I ran weekly syncs, explained trade‑offs clearly, and provided latency/accuracy projections.
+
+Result: We aligned on a feasible MVP and delivered it 2 weeks early.
+
+---
+
+8. Tell us about a time you used Docker or Linux to support ML workflows.
+
+Situation: Our training environment was inconsistent across machines.
+
+Task: Standardise it.
+
+Action: I created a Docker image with CUDA, PyTorch, and all dependencies, plus reproducible bash scripts.
+
+Result: Setup time dropped from hours to minutes, and the team adopted the workflow.
+
+---
+
+9. Describe a time you learned a new technology quickly.
+
+Situation: We needed TensorRT optimisation urgently.
+
+Task: I had to learn it within days.
+
+Action: I followed NVIDIA docs, experimented with sample models, and built a small benchmarking suite.
+
+Result: I delivered a TensorRT‑optimised model that ran 4× faster than the PyTorch version.
+
+---
+
+10. Tell us about a time you improved code quality or maintainability.
+
+Situation: The ML codebase had duplicated scripts and inconsistent naming.
+
+Task: Refactor without breaking functionality.
+
+Action: I modularised utilities, added type hints, and wrote unit tests.
+
+Result: Bug rate dropped by 30%, and onboarding became easier.
+
+---
+
+11. Describe a time you handled a failing model in production.
+
+Situation: A model's accuracy dropped suddenly.
+
+Task: Diagnose and fix.
+
+Action: I checked logs, identified data drift, retrained with updated samples, and added drift alerts.
+
+Result: Accuracy returned to normal within 24 hours, and the issue didn't recur.
+
+
+
+12. Tell us about a time you built a high‑performance inference pipeline.
+Situation:
+We needed to process video frames in real time.
+
+Task:
+Design a GPU‑accelerated pipeline.
+
+Action:
+I used CUDA streams, batched inference, and asynchronous data loaders.
+
+Result:
+Achieved 120 FPS on an RTX GPU.
+
+13. Describe a time you worked with ONNX.
+Situation:
+A partner team needed a framework‑agnostic model.
+
+Task:
+Export and validate ONNX.
+
+Action:
+I exported from PyTorch, fixed opset mismatches, and validated outputs
+
+Result:
+The ONNX model matched the PyTorch outputs within <0.5% numerical tolerance, passed all integration tests, and enabled the partner team to deploy the model in their C++ pipeline.
+
+14. Tell us about a time you had to balance research exploration with delivery deadlines.
+
+Situation: On a previous project, we were exploring transformer‑based vision models, but the delivery timeline was tight.
+
+Task: I needed to explore new architectures without delaying the release.
+
+Action: I split the work into two tracks:
+- A "safe baseline" using a proven CNN model
+- A "research track" testing ViT variants from recent arXiv papers
+I ran experiments in parallel, documented findings daily, and communicated trade‑offs clearly to the team.
+
+Result: We shipped the baseline model on time and later upgraded to a ViT‑based model that improved accuracy by 12%.
+---
+15. Describe a time you improved the reproducibility of an ML workflow.
+
+Situation: Our team struggled to reproduce training results across machines.
+
+Task: I was responsible for making the workflow deterministic and reproducible.
+
+Action: I:
+- Set random seeds across PyTorch, CUDA, and NumPy
+- Created a version‑controlled config system
+- Containerised the environment with Docker
+- Logged all experiments using MLflow
+
+Result: Reproducibility improved dramatically — experiments became 100% repeatable, and debugging time dropped significantly.
+---
+16. Tell us about a time you mentored or supported other engineers.
+
+Situation: A junior engineer was struggling with ONNX export errors.
+
+Task: Help them unblock and build confidence.
+
+Action: I walked them through opset compatibility, debugging tools, and how to validate intermediate tensors. I also created a small internal guide for future use.
+
+Result: They successfully exported the model and later contributed optimised ONNX pipelines independently.
+---
+17. Describe a time you worked with incomplete or noisy data.
+
+Situation: A dataset for a detection model had inconsistent labels and missing annotations.
+
+Task: Clean and prepare the dataset for training.
+
+Action: I wrote scripts to identify label inconsistencies, used weak supervision to fill gaps, and collaborated with domain experts to validate edge cases.
+
+Result: Model accuracy improved by 15%, and the cleaned dataset became the new standard for future projects.
+---
+18. Tell us about a time you proactively identified an improvement opportunity.
+
+Situation: I noticed our inference pipeline spent unnecessary time on CPU preprocessing.
+
+Task: Improve overall throughput.
+
+Action: I rewrote preprocessing steps using CUDA kernels and integrated them directly into the GPU pipeline.
+
+Result: End‑to‑end throughput increased by 3.5×, enabling real‑time performance.
+---
+19. Describe a time you handled a disagreement on technical direction.
+
+Situation: The team was split between using a heavy transformer model vs. a lightweight CNN for deployment.
+
+Task: Facilitate a decision based on evidence.
+
+Action: I proposed a structured evaluation:
+- Benchmarked both models on accuracy, latency, and memory
+- Presented results clearly to stakeholders
+- Highlighted trade‑offs and deployment constraints
+
+Result: The team aligned on the lightweight model, which met all production requirements and shipped successfully.
+---
+20. Tell us about a time you demonstrated strong ownership in an ML project.
+
+Situation: A critical model needed to be delivered for a customer demo, but several components were incomplete.
+
+Task: Take ownership of the end‑to‑end pipeline.
+
+Action: I:
+- Finalised the model
+- Built the inference service
+- Wrote deployment scripts
+- Coordinated with the frontend team to ensure integration
+- Stayed available for rapid fixes
+
+Result: The demo ran flawlessly, and the customer approved the next phase of the project.
+
+13. Describe a time you worked with ONNX.
+Situation
+A partner team needed a framework‑agnostic model so they could run inference in a C++ environment without relying on PyTorch.
+Task
+My responsibility was to export the model to ONNX, ensure compatibility, and validate that the ONNX version produced identical outputs.
+Action
+I exported the model from PyTorch, resolved opset mismatches, replaced unsupported layers with equivalent operations, and validated outputs by comparing intermediate tensors and final predictions across both frameworks.
+R – Result
+The ONNX model matched the PyTorch outputs within <0.5%  numerical tolerance, passed all integration tests. This reduced their inference latency by ~35% and removed the need for Python dependencies in production, improving reliability and portability.
+
+
+14. Tell us about a time you had to balance research exploration with delivery deadlines.
+
+Situation: On a previous project, we were exploring transformer‑based vision models, but the delivery timeline was tight.
+
+Task: I needed to explore new architectures without delaying the release.
+
+Action: I split the work into two tracks:
+- A "safe baseline" using a proven CNN model
+- A "research track" testing ViT variants from recent arXiv papers
+I ran experiments in parallel, documented findings daily, and communicated trade‑offs clearly to the team.
+
+Result: We shipped the baseline model on time and later upgraded to a ViT‑based model that improved accuracy by 12%.
+
+---
+
+15. Describe a time you improved the reproducibility of an ML workflow.
+
+Situation: Our team struggled to reproduce training results across machines.
+
+Task: I was responsible for making the workflow deterministic and reproducible.
+
+Action: I:
+- Set random seeds across PyTorch, CUDA, and NumPy
+- Created a version‑controlled config system
+- Containerised the environment with Docker
+- Logged all experiments using MLflow
+
+Result: Reproducibility improved dramatically — experiments became 100% repeatable, and debugging time dropped significantly.
+
+---
+
+16. Tell us about a time you mentored or supported other engineers.
+
+Situation: A junior engineer was struggling with ONNX export errors.
+
+Task: Help them unblock and build confidence.
+
+Action: I walked them through opset compatibility, debugging tools, and how to validate intermediate tensors. I also created a small internal guide for future use.
+
+Result: They successfully exported the model and later contributed optimised ONNX pipelines independently.
+
+---
+
+17. Describe a time you worked with incomplete or noisy data.
+
+Situation: A dataset for a detection model had inconsistent labels and missing annotations.
+
+Task: Clean and prepare the dataset for training.
+
+Action: I wrote scripts to identify label inconsistencies, used weak supervision to fill gaps, and collaborated with domain experts to validate edge cases.
+
+Result: Model accuracy improved by 15%, and the cleaned dataset became the new standard for future projects.
+
+---
+
+18. Tell us about a time you proactively identified an improvement opportunity.
+
+Situation: I noticed our inference pipeline spent unnecessary time on CPU preprocessing.
+
+Task: Improve overall throughput.
+
+Action: I rewrote preprocessing steps using CUDA kernels and integrated them directly into the GPU pipeline.
+
+Result: End‑to‑end throughput increased by 3.5×, enabling real‑time performance.
+
+---
+
+19. Describe a time you handled a disagreement on technical direction.
+
+Situation: The team was split between using a heavy transformer model vs. a lightweight CNN for deployment.
+
+Task: Facilitate a decision based on evidence.
+
+Action: I proposed a structured evaluation:
+- Benchmarked both models on accuracy, latency, and memory
+- Presented results clearly to stakeholders
+- Highlighted trade‑offs and deployment constraints
+
+Result: The team aligned on the lightweight model, which met all production requirements and shipped successfully.
+
+---
+
+20. Tell us about a time you demonstrated strong ownership in an ML project.
+
+Situation: A critical model needed to be delivered for a customer demo, but several components were incomplete.
+
+Task: Take ownership of the end‑to‑end pipeline.
+
+Action: I:
+- Finalised the model
+- Built the inference service
+- Wrote deployment scripts
+- Coordinated with the frontend team to ensure integration
+- Stayed available for rapid fixes
+
+Result: The demo ran flawlessly, and the customer approved the next phase of the project.
