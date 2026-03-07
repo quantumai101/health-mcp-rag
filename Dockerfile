@@ -11,7 +11,8 @@ COPY --chown=user . $HOME/app
 
 # Build chroma_db fresh on HF using its own chromadb version
 # This eliminates any version mismatch from local builds
-RUN python core/ingest.py
+RUN DATA_PATH=/app/Data python core/ingest.py
+
 
 # HF Spaces requires port 7860
 # server.py reads PORT env var automatically
