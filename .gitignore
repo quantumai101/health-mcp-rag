@@ -39,3 +39,5 @@ tmp/
 *.swp
 
 chroma_db/
+chroma_db/
+*.bin
