@@ -1,13 +1,4 @@
-# Read the doc: https://huggingface.co/docs/hub/spaces-sdks-docker
 FROM python:3.11-slim
-
-# Create non-root user (required by HF Spaces)
-RUN useradd -m -u 1000 user
-USER user
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH \
-    HF_HOME=/tmp/hf_cache \
-    TRANSFORMERS_CACHE=/tmp/hf_cache
 
 WORKDIR $HOME/app
 
@@ -17,6 +8,10 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # Copy app code
 COPY --chown=user . $HOME/app
+
+# Build chroma_db fresh on HF using its own chromadb version
+# This eliminates any version mismatch from local builds
+RUN python core/ingest.py
 
 # HF Spaces requires port 7860
 # server.py reads PORT env var automatically
