@@ -12,8 +12,11 @@ groq
 langchain
 langchain-chroma
 langchain-huggingface
-chromadb==0.6.3
+# chromadb==0.6.3
+chromadb==1.5.2
 sentence-transformers
+huggingface_hub
+
 
 # ── Document Loading ──────────────────────────────────────────
 pdfplumber
@@ -51,3 +54,5 @@ rich
 # pyttsx3
 # elevenlabs
 # openai-whisper
+
+huggingface_hub
