@@ -22,9 +22,9 @@ ENV/
 
 # ── Data & Vector Store (keep out of git — can be large) ─────
 chroma_db/
-data/
-Data/
-official_data/
+# data/
+# Data/
+# official_data/
 
 # ── Temp / OS ────────────────────────────────────────────────
 .DS_Store
