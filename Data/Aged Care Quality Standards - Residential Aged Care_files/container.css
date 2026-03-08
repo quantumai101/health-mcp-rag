@@ -1,0 +1,135 @@
+/* 
+================================
+ Container Styles for DotNetNuke
+================================
+.
+
+
+/*-------------------------------------------------------------------------------*/
+.actions{ width:10px;}
+.clear									 { clear:both;}
+.c_footer								 { padding-right:10px; text-align:right;}
+.dnntitle 								 { padding-left:10px;}
+.c_contentpane 							 {  padding:2px 5px 0px 5px;}
+.ModuleTitle_MenuContainer				 { width:100px!important;}
+
+
+.Container-1 										 { margin-bottom:5px;  }
+.Container-1 .dnntitle					 { white-space:nowrap;   padding:0px; border-top:1px solid #e3e3e3 ; margin-top:38px; text-align:center; }
+.Container-1 .contentmain1			 { }
+.Container-1 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+.Container-1 .Icon_1						 { width:82px; height:36px; background:url(images/quotationMarks.png) no-repeat center center #FFF; display:block ; margin:-18px auto 0px;  }
+															 
+.Container-2 										 { margin-bottom:5px; }
+.Container-2 .dnntitle					 { white-space:nowrap; margin-bottom:10px; padding:0px;} 
+.Container-2 .contentmain1			 { }
+.Container-2 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+
+.Container-3 										 { margin-bottom:5px; }
+.Container-3 .dnntitle					 { white-space:nowrap;  border-bottom:2px solid #e8e8e8; padding:0px; margin-bottom:15px;}
+.Container-3 .contentmain1			 { padding:0px; }
+.Container-3 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+
+.Container-4 										 { margin-bottom:5px; border:1px solid #e4e4e4; padding:1px; }
+.Container-4 .dnntitle					 { white-space:nowrap;   padding:5px 14px; margin-bottom:5px;}
+.Container-4 .contentmain1			 { padding:0px 15px 8px; }
+.Container-4 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+
+.Container-5 										 { margin-bottom:5px; padding:3px 17px; }
+.Container-5 .dnntitle					 { white-space:nowrap;   padding:4px 0px 4px 0px; margin-bottom:5px;} 
+.Container-5 .contentmain1			 { padding:0px 0px 8px;}
+.Container-5 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+
+.Container-6 										 { margin-bottom:5px; padding:10px 20px; background:#f8f8f8; }
+.Container-6 .dnntitle					 { white-space:nowrap; padding:4px 0px 4px 0px;   } 
+.Container-6 .contentmain1			 { padding:0px 0px 5px;}
+.Container-6 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+															 
+.Container-7 										 { margin-bottom:5px; }
+.Container-7 .dnntitle					 { white-space:nowrap; margin-bottom:5px; padding:0px;} 
+.Container-7 .contentmain1			 { }
+.Container-7 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+
+.Container-8 										 { margin-bottom:5px; }
+.Container-8 .dnntitle					 { white-space:nowrap;  border-bottom:2px solid #5c5c5c; padding:0px; margin-bottom:15px;}
+.Container-8 .contentmain1			 { padding-right:5px; }
+.Container-8 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+															 
+.Container-9 										 { margin-bottom:5px; }
+.Container-9 .dnntitle					 { white-space:nowrap; margin-bottom:10px; padding:0px; text-align:center;} 
+.Container-9 .contentmain1			 { }
+.Container-9 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+															 
+.Container-10 									 { margin-bottom:5px; }
+.Container-10 .dnntitle					 { white-space:nowrap; text-align:center; border-bottom:2px solid #e8e8e8; padding:0px; margin-bottom:15px;}
+.Container-10 .contentmain1			 { padding-right:5px; }
+.Container-10 .contentpane			 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+
+.Container-11 										 { margin-bottom:5px; }
+.Container-11 .dnntitle					 { white-space:nowrap; margin-bottom:10px; padding:0px; text-align:center;} 
+.Container-11 .contentmain1			     { }
+.Container-11 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+.Container-11 .Normal					 { color:#FFF; font-size:16px; line-height:2;}				
+
+.Container-12 							 { margin-bottom:5px; }
+.Container-12 .dnntitle					 { white-space:nowrap; margin-bottom:5px; padding:0px; text-align:center;} 
+.Container-12 .contentmain1			     { }
+.Container-12 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+.Container-12 .Normal					 { color:#777777; font-size:13px; line-height:1.5;}				
+
+.Container-13 							 { margin-bottom:5px; }
+.Container-13 .dnntitle					 { white-space:nowrap; margin-bottom:5px; padding:0px; text-align:center; } 
+.Container-13 .contentmain1			     { }
+.Container-13 .contentpane				 { padding:5px 0px 3px 0px;  vertical-align:top; clear:both; }
+.Container-13 .Normal				     { color:#FFF; font-size:20px; line-height:1.5}
+
+															 
+.Container-H1 							 { margin-bottom:5px; }
+.Container-H1 .dnntitle					 { padding:0px;}
+.Container-H1 .contentmain			 	 { }
+.Container-H1 .contentpane			 	 { padding:5px 0px 1px 0px;  vertical-align:top; clear:both;       }
+
+.Container-H2 									 { margin-bottom:5px; }
+.Container-H2 .dnntitle					 { padding:0px;}
+.Container-H2 .contentmain			     {}
+.Container-H2 .contentpane			 	 { padding:5px 0px 1px 0px;  vertical-align:top; clear:both;     }
+
+.Container-H3 							 { margin-bottom:5px; }
+.Container-H3 .dnntitle					 { padding:0px;}
+.Container-H3 .contentmain			 { }
+.Container-H3 .contentpane			 { padding:5px 0px 1px 0px;  vertical-align:top; clear:both;     }
+
+
+
+.title1{font-size:16px;color:#666666; white-space:normal; vertical-align:middle; font-weight:bold  ; padding:20px 0px 0px; margin:0px; }
+.title1 span {font-weight:normal ; color:13px; color:#999999; display:block; font-size:13px; margin:-3px 0px 0px; padding:0px; }
+.title2{font-size:24px;color:#666666; white-space:normal; vertical-align:middle; font-weight:normal; text-transform:uppercase;}
+.title3{font-size:16px;color:#666666; white-space:normal; vertical-align:middle; margin-bottom:-2px; display:inline-block; padding:5px 0px; }
+.title4{font-size:16px;color:#ffffff; white-space:normal; vertical-align:middle; font-weight:bold; }
+.title5{font-size:16px;white-space:normal; vertical-align:middle; font-weight:bold; }
+.title6{font-size:16px;color:#666666; white-space:normal; vertical-align:middle; font-weight:bold; }
+.title7{font-size:16px;white-space:normal; vertical-align:middle; font-weight:bold; }
+.title8{font-size:16px;color:#666666; white-space:normal; vertical-align:middle; margin-bottom:-2px; display:inline-block; padding:5px 0px; }
+.title9{font-size:24px;color:#666666; white-space:normal; vertical-align:middle; font-weight:normal; }
+.title10{font-size:16px;color:#666666; white-space:normal; vertical-align:middle;font-weight:bold; margin-bottom:-2px; display:inline-block; padding:5px 0px; }
+.title11{font-size:40px;color:#FFFFFF; white-space:normal; vertical-align:middle; font-weight:bold; }
+.title12{font-size:24px;color:#666666; white-space:normal; vertical-align:middle; font-weight:bold; }
+.Container-13 .title13{font-size:20px;color:#FFFFFF; white-space:normal; vertical-align:middle ; padding:0px 10px; }
+
+
+*+html .title3,
+*+html .title8,
+*+html .title10{
+	display:inline;
+}
+
+
+
+
+
+
+
+
+
+
+

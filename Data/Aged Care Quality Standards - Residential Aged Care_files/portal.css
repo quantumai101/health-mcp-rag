@@ -1,0 +1,793 @@
+/* 
+ * Deprecated DNN CSS class names will remain available for some time
+ * before being  permanently removed. Removal will occur according to
+ * the  following process:
+ *
+ * 1. Removal will only occur with a major (x.y) release, never
+ *    with a maintenance (x.y.z) release.
+ * 2. Removal will not occur less than six months after the release
+ *    when it was deprecated.
+ * 3. Removal will not occur until after deprecation has been noted 
+ *    in at least two major releases.
+ *
+ *                                              |        |Planned |
+ *  Name                                        |Release |Removal |
+ *----------------------------------------------+--------+--------+
+ * Mod{NAME}C                                     5.6.2    6.2
+ *   {NAME} = sanitized version of the DesktopModule Name 
+ *   Used on <div> tag surrounding Module Content, inside container
+ *----------------------------------------------+--------+--------+
+ */  
+
+
+
+/* PAGE BACKGROUND */
+/* background color for the header at the top of the page  */
+.HeadBg {
+}
+
+/* background color for the content part of the pages */
+Body
+{
+}
+
+.ControlPanel {
+}
+
+/* background/border colors for the selected tab */
+.TabBg {
+}
+
+.LeftPane  { 
+}
+
+.ContentPane  { 
+}
+
+.RightPane  { 
+}
+
+/* text style for the selected tab */
+.SelectedTab {
+}
+
+/* hyperlink style for the selected tab */
+A.SelectedTab:link {
+}
+
+A.SelectedTab:visited  {
+}
+
+A.SelectedTab:hover    {
+}
+
+A.SelectedTab:active   {
+}
+
+/* text style for the unselected tabs */
+.OtherTabs {
+}
+    
+/* hyperlink style for the unselected tabs */
+A.OtherTabs:link {
+}
+
+A.OtherTabs:visited  {
+}
+
+A.OtherTabs:hover    {
+}
+
+A.OtherTabs:active   {
+}
+
+/* GENERAL */
+/* style for module titles */
+.Head   {
+}
+
+/* style of item titles on edit and admin pages */
+.SubHead    {
+}
+
+/* module title style used instead of Head for compact rendering by QuickLinks and Signin modules */
+.SubSubHead {
+}
+
+/* text style used for most text rendered by modules */
+.Normal
+{
+}
+
+/* text style used for textboxes in the admin and edit pages, for Nav compatibility */
+.NormalTextBox
+{
+}
+
+.NormalRed
+{
+}
+
+.NormalBold
+{
+}
+
+/* text style for buttons and link buttons used in the portal admin pages */
+.CommandButton     {
+}
+    
+/* hyperlink style for buttons and link buttons used in the portal admin pages */
+A.CommandButton:link {
+}
+
+A.CommandButton:visited  {
+}
+
+A.CommandButton:hover    {
+}
+    
+A.CommandButton:active   {
+}
+
+/* button style for standard HTML buttons */
+.StandardButton     {
+}
+
+/* GENERIC */
+H1  {
+}
+
+H2  {
+}
+
+H3  {
+}
+
+H4  {
+}
+
+H5, DT  {
+}
+
+H6  {
+}
+
+TFOOT, THEAD    {
+}
+
+TH  {
+}
+
+A:link  {
+}
+
+A:visited   {
+}
+
+A:hover {
+}
+
+A:active    {
+}
+
+SMALL   {
+}
+
+BIG {
+}
+
+BLOCKQUOTE, PRE {
+}
+
+
+UL LI   {
+}
+
+UL LI LI    {
+}
+
+UL LI LI LI {
+}
+
+OL LI   {
+}
+
+OL OL LI    {
+}
+
+OL OL OL LI {
+}
+OL UL LI   {
+}
+
+HR {
+}
+
+/* MODULE-SPECIFIC */
+/* text style for reading messages in Discussion */    
+.Message    {
+}   
+
+/* style of item titles by Announcements and events */
+.ItemTitle    {
+}
+
+/* Menu-Styles */
+/* Module Title Menu */
+.ModuleTitle_MenuContainer {
+}
+
+.ModuleTitle_MenuBar {
+}
+
+.ModuleTitle_MenuItem {
+}
+
+.ModuleTitle_MenuIcon {
+}
+
+.ModuleTitle_SubMenu {
+}
+
+.ModuleTitle_MenuBreak {
+}
+
+.ModuleTitle_MenuItemSel {
+}
+
+.ModuleTitle_MenuArrow {
+}
+
+.ModuleTitle_RootMenuArrow {
+}
+
+/* Main Menu */
+
+.MainMenu_MenuContainer {
+}
+
+.MainMenu_MenuBar {
+}
+
+.MainMenu_MenuItem {
+}
+
+.MainMenu_MenuIcon {
+}
+
+.MainMenu_SubMenu {
+}
+
+.MainMenu_MenuBreak {
+}
+
+.MainMenu_MenuItemSel {
+}
+
+.MainMenu_MenuArrow {
+}
+
+.MainMenu_RootMenuArrow {
+}
+
+/* Login Styles */
+.LoginPanel{
+}
+
+.LoginTabGroup{
+}
+
+.LoginTab {
+}
+
+.LoginTabSelected{
+}
+
+.LoginTabHover{
+}
+
+.LoginContainerGroup{
+}
+
+.LoginContainer{
+}
+
+
+
+/* Custom Styles */
+
+
+a.Button_green {
+  background:#CD1B72 !important;
+	color:#FFFFFF !important;
+  font-size:16px;
+  font-weight:bold;
+}
+a.Button_green:hover{
+  background:#000000! important;
+	color:#FFFFFF !important;
+}
+
+a.Button_green2 {
+  background:#CD1B72 !important;
+	color:#FFFFFF !important;
+  font-size:14px;
+}
+a.Button_green2:hover{
+  background:#000000! important;
+	color:#FFFFFF !important;
+}
+
+div.alert.alert-info.submit-confirm{
+background-color:#ffffff!important;
+  text-align:left!important;
+  color:#000000!important;
+  border:0px
+}
+button#dnn20636submit{
+background-color:#CD1B72;
+  color:#ffffff;
+  border:0px;
+}
+button#dnn20636submit:hover{
+  background-color:#000000;
+}
+button#dnn20628Checkanswer{
+background-color:#CD1B72;
+  color:#ffffff;
+  border:0px;
+}
+button#dnn20628Checkanswer:hover{
+  background-color:#000000;
+}
+button#dnn20629Checkanswer3{
+background-color:#CD1B72;
+  color:#ffffff;
+  border:0px;
+}
+button#dnn20629Checkanswer3:hover{
+  background-color:#000000;
+}
+
+button#dnn20553Checkanswer2{
+background-color:#CD1B72;
+  color:#ffffff;
+  border:0px;
+}
+button#dnn20553Checkanswer2:hover{
+  background-color:#000000;
+}
+
+button#dnn20668Submit{
+background-color:#CD1B72;
+  color:#ffffff;
+  border:0px;
+
+}
+button#dnn20668Submit:hover{
+  background-color:#000000;
+}
+
+button#dnn20516Submit{
+background-color:#CD1B72;
+  color:#ffffff;
+  border:0px;
+
+}
+
+button#dnn20516Submit:hover{
+  background-color:#000000;
+}
+
+
+button#dnn20783Submit{
+background-color:#CD1B72;
+  color:#ffffff;
+  border:0px;
+
+}
+button#dnn20783Submit:hover{
+  background-color:#000000;
+}
+button#dnn20796Submit{
+background-color:#4B0486;
+  color:#ffffff;
+  border:0px;
+
+}
+
+button#dnn20796Submit:hover{
+  background-color:#000000;
+}
+
+button#dnn20801Submit{
+background-color:#4B0486;
+  color:#ffffff;
+  border:0px;
+
+}
+
+button#dnn20801Submit:hover{
+  background-color:#000000;
+}
+
+button#dnn20898Submit{
+background-color:#4B0486;
+  color:#ffffff;
+  border:0px;
+
+}
+
+button#dnn20898Submit:hover{
+  background-color:#000000;
+}
+
+button#dnn20917Submit{
+background-color:#4B0486;
+  color:#ffffff;
+  border:0px;
+
+}
+
+button#dnn20917Submit:hover{
+  background-color:#000000;
+}
+
+button#dnn21092Submit{
+background-color:#4B0486;
+  color:#ffffff;
+  border:0px;
+
+}
+
+button#dnn21092Submit:hover{
+  background-color:#000000;
+}
+
+
+a.Button_blue {
+  background:#4B0486!important;
+	color:#FFFFFF!important;
+  font-size: 16px;
+  font-weight:bold;
+}
+a.Button_blue:hover{
+  background:#000000!important;
+	color:#FFFFFF!important;
+}
+
+a.Button_style3 {
+  background:#4B0486!important;
+	color:#FFFFFF!important;
+  font-size: 16px;
+  font-weight:bold;
+}
+a.Button_style3:hover{
+  background:#000000!important;
+	color:#FFFFFF!important;
+}
+
+.quicklink{
+    border: solid 0px;
+      background-color: #ffffff;
+  border-radius: 5px;
+  padding: 5px 0px 5px 0px;
+  text-align:center;
+  }
+div.slider-selection{
+  background-image: linear-gradient(to bottom, #CD1B72, #CD1B72)!important;
+}
+button#dnn22204Submit{
+background-color:#4B0486;
+  color:#ffffff;
+  border:0px;
+
+}
+
+button#dnn22204Submit:hover{
+  background-color:#000000;
+}
+button#dnn22212Submit{
+background-color:#4B0486;
+  color:#ffffff;
+  border:0px;
+
+}
+
+button#dnn22212Submit:hover{
+  background-color:#000000;
+}
+
+button.btn.btn-primary{
+   background:#0D7693!important;
+	color:#FFFFFF!important;
+}
+button.btn.btn-primary:hover{
+ background:#000000!important;
+	color:#FFFFFF!important;
+}
+.colorpicker{
+ z-index:999!important;
+}
+
+.Toolbar-Overlay{
+color:#000!important;
+}
+z-index: auto;  
+}
+#ui-datepicker-div{
+z-index: 999!important;  
+}
+
+
+        .CareBox {
+            width: 580px;
+            max-width: 100%;
+            position: relative;
+        }
+
+        .CareBox,
+        .CareBox * {
+            box-sizing: border-box;
+        }
+
+        .CareBox .center {
+            width: 100%;
+            padding-bottom: 100%;
+            background-color: #B2B2B2;
+            position: relative;
+            border-radius: 50%;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, .3);
+            --fan-clip: 30%;
+            --fan-wh: 35.5%;
+            --fan-ps: 7%;
+            --fan-pv: 17%;
+            --fan-pt: 3%;
+        }
+
+        .CareBox .title {
+            width: 42%;
+            height: 42%;
+            background-color: #FFF;
+            position: absolute;
+            left: 29%;
+            top: 29%;
+            margin: 0;
+            color: #007396;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 28px;
+            box-shadow: 0 0 0px 0px #FFF, 5px 5px 10px rgba(0, 0, 0, .3);
+            z-index: 6;
+            line-height: 1.2;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all ease-in 200ms;
+        }
+
+        .CareBox .title:hover {
+            box-shadow: 0 0 0px 10px #FFF, 5px 5px 35px rgba(0, 0, 0, .3);
+        }
+
+        .CareBox .content .subtitle {
+            font-size: 15px;
+            margin: 0;
+            line-height: 18px;
+        }
+
+        .CareBox .icon {
+            margin-bottom: 0.3em;
+        }
+
+        .CareBox .icon svg,
+        .CareBox .icon img {
+            fill: currentColor;
+            width: 2em;
+            height: 2em;
+        }
+
+        .CareBox .item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 50%;
+            transition: all ease-in 150ms;
+            pointer-events: none;
+            z-index: 0;
+            backface-visibility: hidden;
+        }
+
+        .CareBox .content {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            flex-direction: column;
+            text-align: center;
+            transition: all ease-in 150ms;
+            z-index: 2;
+            pointer-events: all;
+            text-decoration: none;
+        }
+
+        .CareBox .item:nth-child(1) .content,
+        .CareBox .item:nth-child(2) .content,
+        .CareBox .item:nth-child(5) .content,
+        .CareBox .item:nth-child(6) .content {
+            width: var(--fan-wh);
+            height: 50%;
+        }
+
+        .CareBox .item:nth-child(3) .content,
+        .CareBox .item:nth-child(4) .content,
+        .CareBox .item:nth-child(7) .content,
+        .CareBox .item:nth-child(8) .content {
+            width: 50%;
+            height: var(--fan-wh);
+        }
+
+        .CareBox .item:nth-child(1) .content,
+        .CareBox .item:nth-child(2) .content,
+        .CareBox .item:nth-child(3) .content,
+        .CareBox .item:nth-child(8) .content {
+            bottom: 50%;
+        }
+
+        .CareBox .item:nth-child(4) .content,
+        .CareBox .item:nth-child(5) .content,
+        .CareBox .item:nth-child(6) .content,
+        .CareBox .item:nth-child(7) .content {
+            top: 50%;
+        }
+
+        .CareBox .item:nth-child(2) .content,
+        .CareBox .item:nth-child(3) .content,
+        .CareBox .item:nth-child(4) .content,
+        .CareBox .item:nth-child(5) .content {
+            left: 50%;
+        }
+
+        .CareBox .item:nth-child(6) .content,
+        .CareBox .item:nth-child(7) .content,
+        .CareBox .item:nth-child(8) .content,
+        .CareBox .item:nth-child(1) .content {
+            right: 50%;
+        }
+
+
+        .CareBox .item:nth-child(1) .content {
+            background-color: #855073;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 var(--fan-clip));
+            padding-left: var(--fan-ps);
+            padding-bottom: var(--fan-pv);
+        }
+
+        .CareBox .item:nth-child(2) .content {
+            background-color: #5E6A8B;
+            clip-path: polygon(100% 0, 100% var(--fan-clip), 0 100%, 0 0);
+            padding-right: var(--fan-ps);
+            padding-bottom: var(--fan-pv);
+        }
+
+        .CareBox .item:nth-child(3) .content {
+            background-color: #C84D40;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%, calc(100% - var(--fan-clip)) 0);
+            padding-top: var(--fan-ps);
+            padding-left: var(--fan-pv);
+            padding-right: var(--fan-pt);
+        }
+
+        .CareBox .item:nth-child(4) .content {
+            background-color: #007297;
+            clip-path: polygon(100% 0, 100% 100%, calc(100% - var(--fan-clip)) 100%, 0 0);
+            padding-bottom: var(--fan-ps);
+            padding-left: var(--fan-pv);
+            padding-right: var(--fan-pt);
+        }
+
+        .CareBox .item:nth-child(5) .content {
+            background-color: #60785F;
+            clip-path: polygon(100% calc(100% - var(--fan-clip)), 100% 100%, 0 100%, 0 0);
+            padding-top: var(--fan-pv);
+            padding-right: var(--fan-ps);
+        }
+
+        .CareBox .item:nth-child(6) .content {
+            background-color: #9F3B4F;
+            clip-path: polygon(100% 100%, 0 100%, 0 calc(100% - var(--fan-clip)), 100% 0);
+            padding-top: var(--fan-pv);
+            padding-left: var(--fan-ps);
+        }
+
+        .CareBox .item:nth-child(7) .content {
+            background-color: #807265;
+            clip-path: polygon(100% 0, var(--fan-clip) 100%, 0 100%, 0 0);
+            padding-right: var(--fan-pv);
+            padding-bottom: var(--fan-ps);
+            padding-left: var(--fan-pt);
+        }
+
+        .CareBox .item:nth-child(8) .content {
+            background-color: #12826D;
+            clip-path: polygon(100% 100%, 0 100%, 0 0, var(--fan-clip) 0);
+            padding-right: var(--fan-pv);
+            padding-top: var(--fan-ps);
+            padding-left: var(--fan-pt);
+        }
+
+        .CareBox .content:hover {
+            filter: brightness(1.2);
+        }
+
+        .CareBox .item:hover {
+            width: 106%;
+            height: 106%;
+            left: -3%;
+            top: -3%;
+            z-index: 3;
+            filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.2));
+        }
+
+
+        @media (max-width: 480px) {
+            .CareBox {
+                margin-left: -10px;
+                margin-right: -10px;
+                max-width: calc(100% + 20px);
+            }
+
+            .CareBox .title {
+                font-size: 14px;
+                width: 30%;
+                height: 30%;
+                left: 35%;
+                top: 35%;
+            }
+
+            .CareBox .icon {
+                margin-bottom: 0.1em;
+            }
+
+            .CareBox .icon svg,
+            .CareBox .icon img {
+                width: 1.25em;
+                height: 1.25em;
+            }
+
+            .CareBox .content .subtitle {
+                font-weight: normal;
+                font-size: 12px;
+                line-height: 1.2;
+            }
+
+            .CareBox .center {
+                --fan-ps: 8%;
+                --fan-pv: 17%;
+                --fan-pt: 3%;
+            }
+
+        }
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+color: #FFF!important;
+}
+
+body .breadcrumbborder{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+body .breadcrumb_Pane{
+    display: block!important;
+}
+
+

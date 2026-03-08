@@ -1,0 +1,10 @@
+/*This will hide the copyright, terms and conditions, and privacy policy as added in by the DNN Theme 33*/
+/*This Container theme has been developed specifically for use on https://www.eldac.com.au */
+
+#footer1 > footer > div.Footer_Bottombg > div > div > div.copyright_style{
+    display: none;
+}
+
+div.dnnSearchResultContainer > div.dnnSearchResultItem-Subset > div.dnnSearchResultItem-Title{
+    display: none;
+}
