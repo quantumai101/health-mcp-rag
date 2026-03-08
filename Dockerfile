@@ -9,13 +9,13 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 # Copy app code
 COPY --chown=user . $HOME/app
 
+# Pre-download embedding model during build
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
 # Build chroma_db fresh on HF using its own chromadb version
-# This eliminates any version mismatch from local builds
 RUN DATA_PATH=/app/Data python core/ingest.py
 
-
 # HF Spaces requires port 7860
-# server.py reads PORT env var automatically
 ENV PORT=7860
 
 # Run the server
