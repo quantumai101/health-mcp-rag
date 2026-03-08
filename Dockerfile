@@ -15,6 +15,7 @@ RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTr
 # Build chroma_db fresh on HF using its own chromadb version
 RUN DATA_PATH=/app/Data python core/ingest.py
 
+
 # HF Spaces requires port 7860
 ENV PORT=7860
 
