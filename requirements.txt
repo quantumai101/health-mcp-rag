@@ -5,46 +5,20 @@ python-multipart
 python-dotenv
 pydantic
 
-# ── LLM: Groq (free) ─────────────────────────────────────────
-groq
+# ── LLM: Google Gemini ────────────────────────────────────────
+google-genai
 
-# ── RAG / Vector Store ────────────────────────────────────────
-langchain
-langchain-chroma
-langchain-huggingface
-# chromadb==0.6.3
-chromadb==1.5.2
-sentence-transformers
-huggingface_hub
-
-
-# ── Document Loading ──────────────────────────────────────────
-pdfplumber
-rich
-
-# ── Voice (optional — uncomment if needed) ───────────────────
-# pyttsx3
-# elevenlabs
-# openai-whisper
-
-# ── Core Server ──────────────────────────────────────────────
-fastapi
-uvicorn[standard]
-python-multipart
-python-dotenv
-pydantic
-
-# ── LLM: Groq (free) ─────────────────────────────────────────
-groq
-google-generativeai
-
-# ── RAG / Vector Store ────────────────────────────────────────
+# ── LangChain / LangGraph ─────────────────────────────────────
 langchain
 langchain-chroma
 langchain-text-splitters
 langchain-huggingface
+langgraph
+
+# ── RAG / Vector Store ────────────────────────────────────────
 chromadb
 sentence-transformers
+huggingface_hub
 
 # ── Document Loading ──────────────────────────────────────────
 pdfplumber
@@ -54,5 +28,3 @@ rich
 # pyttsx3
 # elevenlabs
 # openai-whisper
-
-huggingface_hub

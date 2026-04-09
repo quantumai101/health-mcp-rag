@@ -25,6 +25,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
+from langgraph.graph.state import CompiledStateGraph
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 
 from core.agent.tools import (
@@ -35,72 +36,39 @@ from core.agent.tools import (
     ALL_TOOLS,
 )
 
-# ── LLM setup (Gemini via google-generativeai, same as server.py) ────────────
-# import google.generativeai as genai
+# ── LLM setup (google.genai — new SDK) ───────────────────────────────────
+from google import genai
+from google.genai import types
 
-# GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-# GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-exp")
-
-# genai.configure(api_key=GEMINI_API_KEY)
-# _llm = genai.GenerativeModel(GEMINI_MODEL)
-
-
-# def _call_llm(system: str, user: str) -> str:
-#     """Thin wrapper around Gemini generate_content."""
-#     try:
-#         response = _llm.generate_content(f"{system}\n\nUser: {user}")
-#         return response.text.strip()
-#     except Exception as exc:
-#         return f"LLM_ERROR: {exc}"
-
-# ── LLM setup (Gemini via google-generativeai, same as server.py) ────────────
-# import google.generativeai as genai
-#
-# GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-# GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-exp")
-#
-# genai.configure(api_key=GEMINI_API_KEY)
-# _llm = genai.GenerativeModel(GEMINI_MODEL)
-#
-# def _call_llm(system: str, user: str) -> str:
-#     """Thin wrapper around Gemini generate_content."""
-#     try:
-#         response = _llm.generate_content(f"{system}\n\nUser: {user}")
-#         return response.text.strip()
-#     except Exception as exc:
-#         return f"LLM_ERROR: {exc}"
-
-# ── LLM setup (Groq — same key as server.py) ────────────────────────────────
-from groq import Groq
-
-_groq = Groq(api_key=os.getenv("GROQ_API_KEY", ""))
+_genai_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY", ""))
 
 def _call_llm(system: str, user: str) -> str:
-    """Thin wrapper around Groq chat completions."""
+    """Thin wrapper around Gemini via google.genai SDK."""
     try:
-        response = _groq.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user",   "content": user},
-            ],
-            max_tokens=1024,
+        # Valid model names: gemini-2.5-flash-preview-04-17, gemini-2.0-flash, gemini-1.5-flash
+        model_name = os.getenv("GEMINI_MODEL_NAME", "gemini-2.0-flash")
+        response = _genai_client.models.generate_content(
+            model=model_name,
+            contents=user,
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                max_output_tokens=2048,
+                temperature=0.7,
+            ),
         )
-        return response.choices[0].message.content.strip()
+        # response.text can be None if the model returns no candidates
+        return (response.text or "").strip()
     except Exception as exc:
         return f"LLM_ERROR: {exc}"
-    
-
-
 
 
 # ── Agent state ──────────────────────────────────────────────────────────────
 
 class AgentState(TypedDict):
-    messages:    Annotated[list[BaseMessage], add_messages]
-    query:       str
-    route:       str          # 'rag_retrieval' | 'ingest_file' | 'fallback_response'
-    context:     str          # raw tool output
+    messages:     Annotated[list[BaseMessage], add_messages]
+    query:        str
+    route:        str          # 'rag_retrieval' | 'ingest_file' | 'fallback_response'
+    context:      str          # raw tool output
     final_answer: str
 
 
@@ -109,7 +77,6 @@ class AgentState(TypedDict):
 def node_route(state: AgentState) -> AgentState:
     """Decide which tool to invoke."""
     decision = route_query.invoke({"query": state["query"]})
-    # print(f"  [agent] route → {decision}")
     return {**state, "route": decision}
 
 
@@ -121,7 +88,6 @@ def node_retrieve(state: AgentState) -> AgentState:
 
 def node_ingest(state: AgentState) -> AgentState:
     """Ingest a file with error recovery."""
-    # extract a file path from the query if present
     import re
     match = re.search(r'[\w/\\:.\-]+(\.pdf|\.txt|\.md|\.html)', state["query"], re.I)
     if match:
@@ -146,7 +112,6 @@ def node_respond(state: AgentState) -> AgentState:
     query   = state["query"]
     route   = state.get("route", "rag_retrieval")
 
-    # ingest / fallback don't need LLM synthesis
     if route == "ingest_file" or context.startswith("INGEST"):
         answer = context
     elif context in ("NO_RESULTS", "") or context.startswith("RETRIEVAL_ERROR"):
@@ -173,7 +138,7 @@ def _route_edge(state: AgentState) -> str:
 
 # ── Build graph ──────────────────────────────────────────────────────────────
 
-def build_graph() -> StateGraph:
+def build_graph() -> CompiledStateGraph:   # correct return type
     g = StateGraph(AgentState)
 
     g.add_node("route",    node_route)
@@ -188,9 +153,9 @@ def build_graph() -> StateGraph:
         "route",
         _route_edge,
         {
-            "rag_retrieval":    "retrieve",
-            "ingest_file":      "ingest",
-            "fallback_response":"fallback",
+            "rag_retrieval":     "retrieve",
+            "ingest_file":       "ingest",
+            "fallback_response": "fallback",
         },
     )
 
@@ -199,14 +164,14 @@ def build_graph() -> StateGraph:
     g.add_edge("fallback", "respond")
     g.add_edge("respond",  END)
 
-    return g.compile()
+    return g.compile()   # CompiledStateGraph — has .invoke()
 
 
 # ── Public API ───────────────────────────────────────────────────────────────
 
-_graph = None
+_graph: CompiledStateGraph | None = None
 
-def get_agent():
+def get_agent() -> CompiledStateGraph:
     global _graph
     if _graph is None:
         _graph = build_graph()
@@ -215,7 +180,7 @@ def get_agent():
 
 def run_query(query: str, history: list[BaseMessage] | None = None) -> str:
     """
-    Main entry point.  Call this from server.py or any other module.
+    Main entry point. Call this from server.py or any other module.
 
     Example:
         from core.agent.agent import run_query
@@ -260,7 +225,6 @@ if __name__ == "__main__":
         answer = run_query(user_input, history)
         print(f"\nAgent: {answer}")
 
-        # keep rolling history (last 10 turns)
         history.append(HumanMessage(content=user_input))
         history.append(AIMessage(content=answer))
         history = history[-20:]

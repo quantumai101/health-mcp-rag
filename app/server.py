@@ -2,18 +2,18 @@
 """
 ╔══════════════════════════════════════════════════════════════╗
 ║   HEALTH-MCP-RAG · AI Portfolio Server                      ║
-║   Stack: Groq/LLaMA · ChromaDB · FastAPI · LangGraph        ║
+║   Stack: Gemini · ChromaDB · FastAPI · LangGraph            ║
 ╚══════════════════════════════════════════════════════════════╝
 """
 
 import os
-import io
 import sys
 import time
 import shutil
 import threading
+from contextlib import asynccontextmanager
 from pathlib import Path
-from datetime import date, datetime
+from datetime import datetime
 from collections import defaultdict
 from dotenv import load_dotenv
 
@@ -24,16 +24,16 @@ if str(_PROJECT_ROOT) not in sys.path:
 
 load_dotenv(_PROJECT_ROOT / ".env")
 
-from fastapi import FastAPI, HTTPException, Request, UploadFile, File, BackgroundTasks
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi import FastAPI, HTTPException, Request, BackgroundTasks
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-# ── LangGraph agent (replaces direct Gemini/LLM call) ─────────────────────
+# ── LangGraph agent ────────────────────────────────────────────────────────
 from core.agent.agent import run_query as agent_run_query
 from langchain_core.messages import HumanMessage, AIMessage
 
-# ── Research agent (BCI / human augmentation demo) ─────────────────────────
+# ── Research agent ─────────────────────────────────────────────────────────
 from core.agent.research_agent import run_research
 
 try:
@@ -45,15 +45,13 @@ except ImportError:
 
 DATA_DIR   = Path(os.getenv("DATA_PATH",   "./data"))
 CHROMA_DIR = Path(os.getenv("CHROMA_PATH", "./chroma_db"))
-OWNER_NAME   = os.getenv("OWNER_NAME", "the candidate")
+OWNER_NAME = os.getenv("OWNER_NAME", "the candidate")
 
-# ── Model label (display only — LLM is now handled by agent) ──────────────
-LLM_LABEL   = "LLaMA 3.3 · Groq"
+LLM_LABEL   = "Gemini · Google"
 RETRIEVAL_K = 6
 DEEP_K      = 12
 
 # ── RATE LIMITING ─────────────────────────────────────────────────────────
-# Max 10 requests per IP per minute (protects free API quota)
 RATE_LIMIT_REQUESTS = 10
 RATE_LIMIT_WINDOW   = 60  # seconds
 _request_counts: dict = defaultdict(list)
@@ -68,7 +66,7 @@ def check_rate_limit(ip: str):
         )
     _request_counts[ip].append(now)
 
-# ── Persona prompt (kept for context passed into agent) ───────────────────
+# ── Persona prompt ─────────────────────────────────────────────────────────
 PERSONA_PROMPT = """You are an AI portfolio assistant representing {name}.
 You are deployed as a live demonstration of {name}'s practical AI engineering skills —
 specifically their ability to build RAG systems, MCP integrations, and AI-powered
@@ -95,30 +93,38 @@ Today's date: {date}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
-app = FastAPI(title="Health MCP RAG · AI Portfolio", version="1.0")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
+# ── LLM setup (google.genai — new SDK) ────────────────────────────────────
+from google import genai
+from google.genai import types
 
+_genai_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY", ""))
+
+def _call_llm(system: str, user: str) -> str:
+    """Thin wrapper around Gemini via google.genai SDK."""
+    try:
+        model_name = os.getenv("GEMINI_MODEL_NAME", "gemini-2.0-flash")
+        response = _genai_client.models.generate_content(
+            model=model_name,
+            contents=user,
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                max_output_tokens=2048,
+                temperature=0.7,
+            ),
+        )
+        return response.text.strip()
+    except Exception as exc:
+        return f"LLM_ERROR: {exc}"
+
+# ── Embeddings / Vectorstore ───────────────────────────────────────────────
 _embeddings  = None
 _vectorstore = None
-
 
 def get_embeddings():
     global _embeddings
     if _embeddings is None and CHROMA_AVAILABLE:
-        print("  Loading embeddings model…")
-        _embeddings = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L6-v2",
-            model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True},
-        )
-        print("  ✅ Embeddings ready")
+        _embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     return _embeddings
-
 
 def get_vectorstore():
     global _vectorstore
@@ -132,18 +138,45 @@ def get_vectorstore():
         print(f"  ✅ Vector store ready ({_vectorstore._collection.count():,} chunks)")
     return _vectorstore
 
+# ── FastAPI lifespan (replaces deprecated @app.on_event) ──────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print(f"\n{'═'*58}")
+    print(f"  🧬 Health MCP RAG · {OWNER_NAME}")
+    print(f"  🤖 LLM:      {LLM_LABEL} (via LangGraph agent)")
+    print(f"  🗄️  ChromaDB: {'✅ ready' if CHROMA_DIR.exists() else '❌ run ingest.py'}")
+    print(f"  🛡️  Rate limit: {RATE_LIMIT_REQUESTS} req/min per IP")
+    print(f"  🌐 Open:     http://localhost:8000")
+    print(f"{'═'*58}\n")
+    threading.Thread(target=get_vectorstore, daemon=True).start()
+    yield
+
+app = FastAPI(title="Health MCP RAG · AI Portfolio", version="1.0", lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+
+# ── Pydantic models ────────────────────────────────────────────────────────
 
 class ChatRequest(BaseModel):
     text: str
     deep: bool = False
     conversation_history: list = []
 
-
 class ChatResponse(BaseModel):
     reply: str
     sources: list[str] = []
     latency_ms: int = 0
 
+class ResearchRequest(BaseModel):
+    query: str
+
+
+# ── Routes ─────────────────────────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_ui():
@@ -155,14 +188,12 @@ async def serve_ui():
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest, request: Request):
-    # ── Rate limit check ──────────────────────────────────────────────────
     client_ip = request.client.host
     check_rate_limit(client_ip)
 
     t0 = time.time()
     sources: list[str] = []
 
-    # ── Get sources for UI display (agent handles actual retrieval) ───────
     vs = get_vectorstore()
     if vs:
         k = DEEP_K if req.deep else RETRIEVAL_K
@@ -172,10 +203,9 @@ async def chat(req: ChatRequest, request: Request):
                 src  = doc.metadata.get("source", "unknown")
                 name = Path(src).name if src != "unknown" else "knowledge base"
                 sources.append(name)
-        except Exception as e:
-            pass  # agent will still respond via fallback
+        except Exception:
+            pass
 
-    # ── Build conversation history for agent ──────────────────────────────
     history_msgs = []
     for msg in req.conversation_history[-6:]:
         if msg["role"] == "user":
@@ -183,7 +213,6 @@ async def chat(req: ChatRequest, request: Request):
         else:
             history_msgs.append(AIMessage(content=msg["content"]))
 
-    # ── Run LangGraph agent (routing → retrieval → LLM synthesis) ─────────
     try:
         reply = agent_run_query(req.text, history=history_msgs)
     except Exception as e:
@@ -203,14 +232,14 @@ async def get_stats():
         "doc_count":    0,
         "chunk_count":  0,
         "storage_gb":   "—",
-        "model":        f"Groq / {LLM_LABEL}",
+        "model":        LLM_LABEL,
         "chroma_ready": CHROMA_DIR.exists(),
     }
     vs = get_vectorstore()
     if vs:
         try:
             stats["chunk_count"] = vs._collection.count()
-        except:
+        except Exception:
             pass
     if DATA_DIR.exists():
         docs = (
@@ -222,7 +251,7 @@ async def get_stats():
     try:
         total, used, _ = shutil.disk_usage(str(DATA_DIR) if DATA_DIR.exists() else ".")
         stats["storage_gb"] = f"{used/(1024**3):.1f} / {total/(1024**3):.0f} GB"
-    except:
+    except Exception:
         pass
     return stats
 
@@ -254,10 +283,6 @@ async def serve_research_demo():
     return HTMLResponse("<h1>research_demo.html not found</h1>")
 
 
-class ResearchRequest(BaseModel):
-    query: str
-
-
 @app.post("/research")
 async def research(req: ResearchRequest, request: Request):
     client_ip = request.client.host
@@ -267,18 +292,6 @@ async def research(req: ResearchRequest, request: Request):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Research agent error: {str(e)}")
-
-
-@app.on_event("startup")
-async def startup():
-    print(f"\n{'═'*58}")
-    print(f"  🧬 Health MCP RAG · {OWNER_NAME}")
-    print(f"  🤖 LLM:      {LLM_LABEL} (via LangGraph agent)")
-    print(f"  🗄️  ChromaDB: {'✅ ready' if CHROMA_DIR.exists() else '❌ run ingest.py'}")
-    print(f"  🛡️  Rate limit: {RATE_LIMIT_REQUESTS} req/min per IP")
-    print(f"  🌐 Open:     http://localhost:8000")
-    print(f"{'═'*58}\n")
-    threading.Thread(target=get_vectorstore, daemon=True).start()
 
 
 if __name__ == "__main__":
